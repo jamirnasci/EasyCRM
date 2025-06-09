@@ -1,7 +1,9 @@
 from peewee import ForeignKeyField, CharField, DateField, TextField, DateTimeField
-import datetime
+from datetime import datetime
 
-from models import BaseModel, Client, User
+from models.BaseModel import BaseModel
+from models.Client import Client
+from models.User import User
 
 class Task(BaseModel):
     client = ForeignKeyField(Client, backref='tasks', on_delete='CASCADE')
@@ -11,3 +13,6 @@ class Task(BaseModel):
     due_date = DateField(null=True)
     status = CharField(choices=[('pending', 'pending'), ('completed', 'completed')], default='pending')
     created_at = DateTimeField(default=datetime.now)
+
+    class Meta:
+        table_name = 'tasks'

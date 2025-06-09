@@ -2,7 +2,6 @@ from flask import Blueprint, request, redirect, url_for, render_template
 from models.User import User
 from werkzeug.security import generate_password_hash
 
-
 user_bp = Blueprint('user', __name__)
 
 @user_bp.route('/create-user', methods=['GET', 'POST'])
