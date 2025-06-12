@@ -35,13 +35,15 @@ def create_client():
     return render_template('client/create_client.html')
 
 @client_bp.route('/client-details/<int:id>')
+@jwt_required()
 def client_details(id):
-    client = Client.get(Client.id == id)
+    client = Client.get((Client.id == id) & (Client.user_id == get_jwt_identity()))
     if client:
         return render_template('client/client_details.html', client=client)
     return jsonify({'msg': 'Client not found !'})
 
 @client_bp.route('/update-client/<int:id>', methods=['POST'])
+@jwt_required()
 def update_client(id):
     name = request.form['name']
     email = request.form['email']

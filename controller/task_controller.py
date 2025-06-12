@@ -33,7 +33,7 @@ def create_task():
 @task_bp.route('/today', methods=['GET'])
 @jwt_required()
 def today():
-    today_tasks = Task.select().join(User, on=(User.id == Task.user_id)).join(Client, on=(Client.id == Task.client_id))
+    today_tasks = Task.select().join(User, on=(User.id == Task.user_id)).join(Client, on=((Client.id == Task.client_id) & (Client.user_id == get_jwt_identity())))
     return render_template('tasks/today.html', tasks=today_tasks)
 
 @task_bp.route('/update-task/<int:id>', methods=['PUT'])

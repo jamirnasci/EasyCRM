@@ -27,20 +27,14 @@ app.register_blueprint(task_bp)
 
 @jwt.unauthorized_loader
 def unauthorized_response(e):
-
-    #flash('Por favor, faça login para aceder a esta página.', 'warning')
     return redirect(url_for('login.login')), 302 # 302 Found para redirecionamento temporário
 
 @jwt.invalid_token_loader
 def invalid_token_response(e):
-
-    #flash('O seu token de acesso é inválido. Por favor, faça login novamente.', 'danger')
     return redirect(url_for('login.login')), 302
 
 @jwt.expired_token_loader
 def expired_token_response(e):
-
-    #flash('A sua sessão expirou. Por favor, faça login novamente.', 'info')
     return redirect(url_for('login.login')), 302
 
 if __name__ == '__main__':

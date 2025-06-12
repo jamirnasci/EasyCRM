@@ -1,10 +1,12 @@
 from flask import Blueprint, request, redirect, url_for, render_template
 from models.User import User
 from werkzeug.security import generate_password_hash
+from flask_jwt_extended import jwt_required
 
 user_bp = Blueprint('user', __name__)
 
 @user_bp.route('/create-user', methods=['GET', 'POST'])
+@jwt_required()
 def create_user():
     if request.method == 'POST':
         name = request.form['name']
