@@ -1,0 +1,33 @@
+html, body{
+    height: 100vh;
+}
+
+body{
+    display: flex;
+    background: radial-gradient(white, whitesmoke, lightgray);
+}
+
+#side-bar{
+    width: 200px;
+}
+
+input, select, textarea{
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.page-content{
+    flex: 1;
+    padding: 10px;
+}
+
+.side-bar-link{
+    color: whitesmoke;
+    text-decoration: none;
+    margin-top: 10px;
+    padding-left: 5px;
+    transition: ease 0.2s;
+}
+.side-bar-link:hover{
+    font-weight: bold;
+}
