@@ -44,30 +44,10 @@
                         <option value="completed">Completed</option>
                     </select>
                 </div>
-                <button taskID="{{task.id}}" onclick="updateTask(this)" class="btn btn-success mt-1">Update</button>
+                <button id="update-btn" taskId="{{task.id}}" class="btn btn-success mt-1">Update</button>
             </div>
         </div>
     </div>
 </body>
-<script>
-    async function updateTask(event) {
-        const id = event.getAttribute('taskId')
-        const res = await fetch(`/task/update/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                status: document.getElementById('status').value
-            })
-        })
-        if (res.status === 200) {
-            const obj = await res.json()
-            alert(obj.msg)
-        } else {
-            alert('Fail to update Task')
-        }
-    }
-</script>
-
+<script src="{{url_for('static', filename='/js/atualizarTask.js')}}"></script>
 </html>

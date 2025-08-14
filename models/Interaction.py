@@ -1,7 +1,9 @@
 from peewee import ForeignKeyField, CharField, DateTimeField, TextField
-import datetime
+from datetime import datetime
 
-from models import BaseModel, Client, User
+from models.BaseModel import BaseModel
+from models.Client import Client
+from models.User import User
 
 class Interaction(BaseModel):
     client = ForeignKeyField(Client, backref='interactions', on_delete='CASCADE')

@@ -6,7 +6,6 @@ from flask_jwt_extended import jwt_required
 user_bp = Blueprint('user', __name__)
 
 @user_bp.route('/create', methods=['GET', 'POST'])
-@jwt_required()
 def create_user():
     if request.method == 'POST':
         name = request.form['name']

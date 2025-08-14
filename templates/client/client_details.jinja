@@ -14,7 +14,7 @@
     <div class="page-content">
         <div class="p-3">
             <h3>Update Client</h3>
-            <form method="POST" action="/client/update/{{ client.id }}" class="w-75">
+            <form id="client-form" method="POST" idcliente="{{ client.id }}" class="w-75">
                 <div class="mb-3">
                     <label for="name" class="form-label">Full Name</label>
                     <input type="text" class="form-control form-control-sm" id="name" name="name"
@@ -61,5 +61,5 @@
         </div>
     </div>
 </body>
-
+<script src="{{url_for('static', filename='/js/atualizarCliente.js')}}"></script>
 </html>

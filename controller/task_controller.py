@@ -11,12 +11,13 @@ task_bp = Blueprint('task', __name__)
 @jwt_required()
 def create_task():
     if request.method == 'POST':
+        json = request.get_json()
         identity = get_jwt_identity()
-        title = request.form['title']
-        due_date = request.form['due_date']
-        status = request.form['status']
-        description = request.form['description']
-        client_id = request.form['client_id']
+        title = json.get('title')
+        due_date = json.get('due_date')
+        status = json.get('status')
+        description = json.get('description')
+        client_id = json.get('client_id')
 
         try:
             Task(
@@ -24,8 +25,10 @@ def create_task():
                 status = status, description = description,
                 user = identity, client = client_id
             ).save()
+            return jsonify({'msg': 'Task criada'}), 200
         except Exception as e:
             print(e)
+            return jsonify({'msg': 'Falha ao criar task'}), 400
         
     client_list = Client.select()
     return render_template('tasks/create_task.jinja', clients=client_list)
@@ -43,7 +46,7 @@ def update_task(id):
     status = data.get('status')
     try:
         Task.update(status = status).where(Task.id == id).execute()
-        return jsonify({'msg': 'Task updated !'})
+        return jsonify({'msg': 'Task atualizada'})
     except Exception as e:
         print(e)
 

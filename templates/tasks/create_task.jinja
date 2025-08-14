@@ -13,7 +13,7 @@
     <div class="page-content">
         <div class="p-3">
             <h3>New Task</h3>
-            <form class="w-75" method="POST" action="/task/create">
+            <form id="task-form" class="w-75" method="POST">
                 <div class="row">
                     <div class="col">
                         <label for="title" class="form-label">Title</label>
@@ -55,5 +55,5 @@
         </div>
     </div>
 </body>
-
+<script src="{{url_for('static', filename='/js/cadastrarTask.js')}}"></script>
 </html>

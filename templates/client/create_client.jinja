@@ -14,7 +14,7 @@
     <div class="page-content">
         <div class="p-3">
             <h3>Create Client</h3>
-            <form method="POST" action="/client/create" class="w-75">
+            <form id="client-form" method="POST" class="w-75">
                 <div class="row">
                     <div class="col">
                         <label for="name" class="form-label">Nome completo</label>
@@ -50,7 +50,8 @@
                     <div class="col">
                         <label class="form-label" for="position">Position</label>
                         <select class="form-control" type="text" name="position" id="position">
-                            <option value="vende"></option>
+                            <option value="lider">Líder</option>
+                            <option value="vendedor">Vendedor</option>
                         </select>
                     </div>
                 </div>
@@ -66,5 +67,5 @@
         </div>
     </div>
 </body>
-
+<script src="{{url_for('static', filename='/js/cadastrarCliente.js')}}"></script>
 </html>

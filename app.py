@@ -6,9 +6,19 @@ from controller.client_controller import client_bp
 from controller.index_controller import index_bp
 from controller.task_controller import task_bp
 from datetime import timedelta
+from flask_cors import CORS
 
+from models.Client import Client
+from models.Interaction import Interaction
+from models.Task import Task
+from models.User import User
+from config.mysql import db
+
+#db.connect()
+#db.create_tables([Client, Interaction, Task, User])
 
 app = Flask(__name__)
+CORS(app)
 
 app.config["JWT_SECRET_KEY"] = '302m1kj1sj21j09s'
 app.config["JWT_TOKEN_LOCATION"] = "cookies"

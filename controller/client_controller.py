@@ -16,13 +16,14 @@ def clients():
 @jwt_required()
 def create_client():
     if request.method == 'POST':
+        json = request.get_json()
         user_id = get_jwt_identity()
-        name = request.form['name']
-        email = request.form['email']
-        phone = request.form['phone']
-        company = request.form['company']
-        position = request.form['position']
-        status = request.form['status']
+        name = json.get('name')
+        email = json.get('email')
+        phone = json.get('phone')
+        company = json.get('company')
+        position = json.get('position')
+        status = json.get('status')
         
         try:
             Client(
@@ -31,8 +32,10 @@ def create_client():
                 position = position, status = status,
                 user_id = user_id
             ).save()
+            return jsonify({'msg': 'Cliente cadastrado'}), 200
         except Exception as e:
             print(e)
+            return jsonify({'msg': 'Falha ao cadastrar cliente'}), 400
     return render_template('client/create_client.jinja')
 
 @client_bp.route('/details/<int:id>')
@@ -46,21 +49,23 @@ def client_details(id):
 @client_bp.route('/update/<int:id>', methods=['POST'])
 @jwt_required()
 def update_client(id):
-    name = request.form['name']
-    email = request.form['email']
-    phone = request.form['phone']
-    company = request.form['company']
-    position = request.form['position']
-    status = request.form['status']
+    json = request.get_json()
+    name = json.get('name')
+    email = json.get('email')
+    phone = json.get('phone')
+    company = json.get('company')
+    position = json.get('position')
+    status = json.get('status')
     try:
         Client.update(                
             name = name, email = email,
             phone = phone, company = company,
             position = position, status = status,
         ).where(Client.id == id).execute()
-        return redirect(url_for('client.client_details', id=id))
+        return jsonify({'msg': 'Cliente atualizado'}), 200
     except Exception as e:
         print(e)
+        return jsonify({'msg': 'Falha ao atualizar clientes'}), 400
 
 @client_bp.route('/delete/<int:id>', methods=['GET'])
 @jwt_required()
