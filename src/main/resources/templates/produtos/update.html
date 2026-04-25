@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atualizar Produto</title>
+    <th:block th:replace="~{partials/headers :: headers}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+</head>
+
+<body>
+    <div th:replace="~{partials/sideBar :: sideBar}"></div>
+	<div class="container-fluid pt-4">
+	    <div class="d-flex justify-content-between align-items-center mb-4">
+	        <h2 class="h4 fw-bold">Atualizar Produto</h2>
+	    </div>
+		<form th:action="'/produtos/update/' + ${p.idproduct}" method="POST" id="formProduto" enctype="multipart/form-data">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <label class="form-label small fw-bold">Nome do Produto/Serviço</label>
+                    <input th:value="${p.name}" type="text" class="form-control" name="name" placeholder="Ex: Planilha de Automação" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small fw-bold">Preço de Venda (R$)</label>
+                    <input th:value="${p.price}" type="number" name="price" step="0.01" class="form-control" placeholder="0,00">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small fw-bold">Estoque</label>
+                    <input th:value="${p.quantity}" type="number" name="quantity" class="form-control" placeholder="0">
+                </div>
+				<div class="col-12">
+				    <label class="form-label small fw-bold">Imagem</label>
+				    <input class="form-control" type="file" name="imgFile"/>
+				</div>
+                <div class="col-12">
+                    <label class="form-label small fw-bold">Descrição</label>
+                    <textarea th:text="${p.name}" class="form-control" name="description" rows="3" placeholder="Detalhes técnicos ou especificações..."></textarea>
+                </div>
+                <div class="col-12 mt-4">
+                    <hr>
+                    <div class="d-flex justify-content-end gap-2">
+                        <a type="button" class="btn btn-light" href="/produtos">Cancelar</a>
+                        <button type="submit" class="btn btn-primary px-4">Atualizar Produto</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+	</div>
+
+</body>
+
+</html>

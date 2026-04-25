@@ -1,0 +1,94 @@
+package com.jamir.easycrm.service;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.jamir.easycrm.model.Product;
+import com.jamir.easycrm.repository.ProductRepository;
+
+@Service
+public class ProductService {
+	@Autowired
+	private ProductRepository pr;
+	
+	public List<Product> findAll(){
+        return pr.findAll();
+    }
+	
+	public List<Product> search(String key){
+        return pr.search(key);
+    }
+	
+    public Optional<Product> findById(Long id){
+        return pr.findById(id);
+    }
+    
+    public Product create(Product p, MultipartFile imgFile){
+    	if(imgFile != null && imgFile.isEmpty()) {
+			throw new RuntimeException("Arquivo foto de produto inválido");
+		}
+		String originalName = imgFile.getOriginalFilename();
+		String extension = originalName.substring(originalName.lastIndexOf("."));
+		
+		String fileName = UUID.randomUUID().toString();
+		Path uploadPath = Paths.get("uploads/products/");
+		
+		if(!Files.exists(uploadPath)) {
+			try {
+				Files.createDirectories(uploadPath);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		Path filePath = uploadPath.resolve(fileName);
+		try {
+			Files.copy(imgFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		p.setImgUrl("/uploads/products/" + fileName);
+		return pr.save(p);
+
+    }
+    public Optional<Product> update(Long idcustomer, Product p){
+        return pr.findById(idcustomer).map(productFound ->{
+        	productFound.setName(p.getName());
+        	productFound.setDescription(p.getDescription());
+        	productFound.setPrice(p.getPrice());
+        	productFound.setQuantity(p.getQuantity());
+        	productFound.setName(p.getName());
+            return pr.save(productFound);
+        });
+    }
+    public Optional<Product> delete(Long idcustomer){
+        return pr.findById(idcustomer).map(productFound ->{
+        	String filePath = productFound.getImgUrl();
+        	if(filePath.startsWith("/")) {
+        	    filePath = filePath.substring(1);
+        	}
+        	String basePath = System.getProperty("user.dir");
+        	File imgFile = new File(basePath, filePath);
+        	
+        	if(imgFile.exists()) {        		
+        		if(!imgFile.delete()) {
+        			throw new RuntimeException("Falha ao remover imagem do produto");
+        		}
+        	}
+        	pr.delete(productFound);
+            return productFound;
+        });
+    }
+}

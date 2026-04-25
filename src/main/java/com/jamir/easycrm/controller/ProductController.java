@@ -1,12 +1,75 @@
 package com.jamir.easycrm.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.jamir.easycrm.model.Customer;
+import com.jamir.easycrm.model.CustomerStatus;
+import com.jamir.easycrm.model.Product;
+import com.jamir.easycrm.service.ProductService;
 
 @Controller
 public class ProductController {
+	
+	@Autowired
+	private ProductService ps;
+	
 	@GetMapping("/produtos")
-	public String product() {
-		return "produtos/page";
+	public ModelAndView product() {
+		ModelAndView mv = new ModelAndView("/produtos/page");
+		List<Product> loadedProdutos = ps.findAll();
+		mv.addObject("products", loadedProdutos);
+		return mv;
+	}
+	@PostMapping("/produtos/create")
+	public String create(@ModelAttribute Product p, @RequestParam("imgFile") MultipartFile imgFile) {
+		ps.create(p, imgFile);
+		return "redirect:/produtos";
+	}
+	@GetMapping("/produtos/update/{id}")
+	public ModelAndView update(@PathVariable(name = "id") Long id) {
+		return ps.findById(id).map(productFound ->{
+			ModelAndView mv = new ModelAndView("produtos/update");
+			mv.addObject("p", productFound);
+			return mv;
+		}).orElseGet(()->{
+			return new ModelAndView("redirect:/produtos");
+		});		
+	}
+	@PostMapping("/produtos/update/{id}")
+	public String update(@PathVariable(name = "id") Long id, Product p) {
+		return ps.update(id, p).map(updatedProduct ->{
+			return "redirect:/produtos";
+		}).orElseGet(()->{
+			String msg = "Falha ao atualizar produto";
+			return "redirect:/produtos?msg=" + msg;
+		});		
+	}
+	@DeleteMapping("/produtos/delete/{id}")
+	public ResponseEntity<Map<String, String>> delete(@PathVariable(name = "id") Long id) {
+		Map<String, String> res = new HashMap();
+		return ps.delete(id).map(removedProduct -> {
+
+            res.put("msg", "Produto removido com sucesso");
+            return ResponseEntity.status(HttpStatus.OK).body(res);
+		}).orElseGet(()->{
+
+            res.put("msg", "Falha ao remover produto");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+		});
 	}
 }

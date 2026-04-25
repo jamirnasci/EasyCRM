@@ -57,30 +57,21 @@
 	                        </tr>
 	                    </thead>
 	                    <tbody>
-	                        <tr>
+	                        <tr th:each="p : ${products}">
 	                            <td class="ps-4">
-	                                <div class="fw-bold">Licença EasyCRM Pro</div>
+	                                <div class="fw-bold" th:text="${p.name}"></div>
 	                                <small class="text-muted">SKU: CRM-PRO-01</small>
 	                            </td>
-	                            <td><span class="badge bg-info text-dark">Software</span></td>
-	                            <td>R$ 499,90</td>
-	                            <td><span class="text-success fw-bold">99+</span></td>
+	                            <td><span class="badge bg-info text-dark"></span></td>
+	                            <td th:text="${p.price}"></td>
+	                            <td><span class="text-success fw-bold" th:text="${p.quantity}">99+</span></td>
 	                            <td class="text-end pe-4">
-	                                <button class="btn btn-sm btn-light text-primary"><i class="fa-solid fa-pen"></i></button>
-	                                <button class="btn btn-sm btn-light text-danger"><i class="fa-solid fa-trash"></i></button>
-	                            </td>
-	                        </tr>
-	                        <tr>
-	                            <td class="ps-4">
-	                                <div class="fw-bold">Consultoria Técnica</div>
-	                                <small class="text-muted">SKU: SRV-CONS-01</small>
-	                            </td>
-	                            <td><span class="badge bg-secondary">Serviços</span></td>
-	                            <td>R$ 150,00/h</td>
-	                            <td><span class="text-muted">—</span></td>
-	                            <td class="text-end pe-4">
-	                                <button class="btn btn-sm btn-light text-primary"><i class="fa-solid fa-pen"></i></button>
-	                                <button class="btn btn-sm btn-light text-danger"><i class="fa-solid fa-trash"></i></button>
+	                                <a class="btn btn-sm btn-light text-primary" th:href="'/produtos/update/' + ${p.idproduct}">
+										<i class="fa-solid fa-pen"></i>
+									</a>
+									<button class="btn btn-sm btn-light text-danger" th:productname="${p.name}" th:idproduct="${p.idproduct}" onClick="deleteHandler(this)">
+										<i class="fa-solid fa-trash"></i>
+									</button>
 	                            </td>
 	                        </tr>
 	                    </tbody>
@@ -98,36 +89,27 @@
 	                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	            </div>
 	            <div class="modal-body p-4">
-	                <form id="formProduto">
+	                <form action="/produtos/create" method="POST" id="formProduto" enctype="multipart/form-data">
 	                    <div class="row g-3">
 	                        <div class="col-md-8">
 	                            <label class="form-label small fw-bold">Nome do Produto/Serviço</label>
-	                            <input type="text" class="form-control" placeholder="Ex: Planilha de Automação" required>
-	                        </div>
-	                        <div class="col-md-4">
-	                            <label class="form-label small fw-bold">Código (SKU)</label>
-	                            <input type="text" class="form-control" placeholder="PROD-001">
-	                        </div>
-	                        <div class="col-md-4">
-	                            <label class="form-label small fw-bold">Categoria</label>
-	                            <select class="form-select">
-	                                <option selected>Selecione...</option>
-	                                <option>Software</option>
-	                                <option>Automação</option>
-	                                <option>Serviços</option>
-	                            </select>
+	                            <input type="text" class="form-control" name="name" placeholder="Ex: Planilha de Automação" required>
 	                        </div>
 	                        <div class="col-md-4">
 	                            <label class="form-label small fw-bold">Preço de Venda (R$)</label>
-	                            <input type="number" step="0.01" class="form-control" placeholder="0,00">
+	                            <input type="number" name="price" step="0.01" class="form-control" placeholder="0,00">
 	                        </div>
 	                        <div class="col-md-4">
-	                            <label class="form-label small fw-bold">Estoque Inicial</label>
-	                            <input type="number" class="form-control" placeholder="0">
+	                            <label class="form-label small fw-bold">Estoque</label>
+	                            <input type="number" name="quantity" class="form-control" placeholder="0">
 	                        </div>
+							<div class="col-12">
+							    <label class="form-label small fw-bold">Imagem</label>
+							    <input class="form-control" type="file" name="imgFile"/>
+							</div>
 	                        <div class="col-12">
 	                            <label class="form-label small fw-bold">Descrição</label>
-	                            <textarea class="form-control" rows="3" placeholder="Detalhes técnicos ou especificações..."></textarea>
+	                            <textarea class="form-control" name="description" rows="3" placeholder="Detalhes técnicos ou especificações..."></textarea>
 	                        </div>
 	                        <div class="col-12 mt-4">
 	                            <hr>
@@ -143,5 +125,5 @@
 	    </div>
 	</div>
 </body>
-
+<script th:src="@{/js/produtos.js}"></script>
 </html>
