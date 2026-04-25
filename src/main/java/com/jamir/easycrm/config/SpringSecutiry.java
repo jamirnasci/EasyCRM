@@ -17,17 +17,19 @@ public class SpringSecutiry {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(request -> request
+            	.requestMatchers("/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/").permitAll()
                 .requestMatchers(HttpMethod.GET, "/login").permitAll()
-                .requestMatchers(HttpMethod.GET, "/create-account").permitAll()
+                .requestMatchers(HttpMethod.GET, "/usuario/cadastro").permitAll()
+                .requestMatchers(HttpMethod.POST, "/usuario/cadastro").permitAll()
                 .requestMatchers(HttpMethod.POST, "/login").permitAll()
-                .requestMatchers(HttpMethod.POST, "/user/create").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(formLogin -> formLogin
                 .loginPage("/login")
-                .defaultSuccessUrl("/home", true)
+                .defaultSuccessUrl("/clientes", true)
                 .loginProcessingUrl("/login")
+                .usernameParameter("email")
                 .permitAll()
             ).logout(logout -> logout
                 .logoutUrl("/logout")

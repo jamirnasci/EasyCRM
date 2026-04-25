@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atualizar Cliente</title>
+    <th:block th:replace="~{partials/headers :: headers}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+</head>
+
+<body>
+
+    <div th:replace="~{partials/sideBar :: sideBar}"></div>
+    <div class="container-fluid pt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h4 fw-bold">Atualizar Cliente</h2>
+        </div>
+		<div class="modal-body p-4">
+		    <form th:action="'/clientes/update/' + ${customer.idcustomer}" method="post" id="formCliente">
+		        <div class="row g-3">
+		            <div class="col-md-6">
+		                <label class="form-label small fw-bold">Nome Completo</label>
+		                <input th:value="${customer.name}" type="text" class="form-control" name="name" placeholder="Ex: Maria Oliveira" required>
+		            </div>
+		            <div class="col-md-6">
+		                <label class="form-label small fw-bold">E-mail</label>
+		                <input th:value="${customer.email}" type="email" class="form-control" name="email" placeholder="maria@email.com" required>
+		            </div>
+		            <div class="col-md-6">
+		                <label class="form-label small fw-bold">Telefone/WhatsApp</label>
+		                <input th:value="${customer.phone}" type="tel" class="form-control" name="phone" placeholder="(00) 00000-0000">
+		            </div>
+		            <div class="col-md-6">
+		                <label class="form-label small fw-bold">CPF/CNPJ</label>
+		                <input th:value="${customer.cpf}" type="text" class="form-control" name="cpf" placeholder="000.000.000-00" maxLength="11">
+		            </div>
+					<div class="col-md-6">
+					    <label class="form-label small fw-bold">Status</label>
+					    <select class="form-select" name="status">
+							<option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+						</select>
+					</div>
+		            <div class="col-12">
+		                <label class="form-label small fw-bold">Descrição</label>
+		                <textarea th:text="${customer.description}" rows="5" class="form-control" name="description" placeholder="Rua, Número, Bairro..."></textarea>
+		            </div>
+		            <div class="col-12 mt-4">
+		                <hr>
+		                <div class="d-flex justify-content-end gap-2">
+		                    <a type="button" class="btn btn-light" href="/clientes">Cancelar</a>
+		                    <button type="submit" class="btn btn-primary px-4">Atualizar Cliente</button>
+		                </div>
+		            </div>
+		        </div>
+		    </form>
+		</div>
+    </div>
+</body>
+
+</html>

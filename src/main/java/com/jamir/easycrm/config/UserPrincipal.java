@@ -12,33 +12,33 @@ import com.jamir.easycrm.model.*;
 public class UserPrincipal implements UserDetails {
 	
 	private static final long serialVersionUID = 1L;
-	private final User usuario;
+	private final User user;
 	
 	public UserPrincipal(User user) {
-		this.usuario = user;
+		this.user = user;
 	}
 	
 	public Long getId() {
-		return usuario.getIduser();
+		return user.getIduser();
 	}
 
 	public User getUser() {
-		return usuario;
+		return user;
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + usuario.getRole()));
+		return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
 	}
 
 	@Override
 	public String getPassword() {
-		return usuario.getPassword(); 
+		return user.getPassword(); 
 	}
 
 	@Override
 	public String getUsername() {
-		return usuario.getEmail();
+		return user.getEmail();
 	}
 
 	@Override

@@ -1,5 +1,91 @@
 package com.jamir.easycrm.model;
 
-public class Sale {
+import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.CreatedDate;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
+@Entity
+public class Sale {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idsale;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private SaleStatus status = SaleStatus.EM_NEGOCIACAO;    
+
+    @ManyToOne()
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
+    @ManyToOne()
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne()
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+	
+	public Long getIdsale() {
+		return idsale;
+	}
+	public void setIdsale(Long idsale) {
+		this.idsale = idsale;
+	}
+	public PaymentMethod getPaymentMethod() {
+		return paymentMethod;
+	}
+	public void setPaymentMethod(PaymentMethod paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
+	public SaleStatus getStatus() {
+		return status;
+	}
+	public void setStatus(SaleStatus status) {
+		this.status = status;
+	}
+	public Customer getCustomer() {
+		return customer;
+	}
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	public Product getProduct() {
+		return product;
+	}
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+	public LocalDateTime getCreated_at() {
+		return createdAt;
+	}
+	public void setCreated_at(LocalDateTime created_at) {
+		this.createdAt = created_at;
+	}
+    
+    
 }
