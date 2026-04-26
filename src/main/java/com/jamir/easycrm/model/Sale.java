@@ -1,5 +1,6 @@
 package com.jamir.easycrm.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -16,76 +17,114 @@ import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Sale {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idsale;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long idsale;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private PaymentMethod paymentMethod;
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private PaymentMethod paymentMethod;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private SaleStatus status = SaleStatus.EM_NEGOCIACAO;    
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private SaleStatus status = SaleStatus.EM_NEGOCIACAO;
 
-    @ManyToOne()
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+	@Column(nullable = false)
+	private int quantity;
 
-    @ManyToOne()
-    @JoinColumn(name = "user_id")
-    private User user;
+	@Column(nullable = false)
+	private BigDecimal total;
 
-    @ManyToOne()
-    @JoinColumn(name = "product_id")
-    private Product product;
+	@ManyToOne()
+	@JoinColumn(name = "customer_id")
+	private Customer customer;
 
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-	
+	@ManyToOne()
+	@JoinColumn(name = "user_id")
+	private User user;
+
+	@ManyToOne()
+	@JoinColumn(name = "product_id")
+	private Product product;
+
+	@CreatedDate
+	@Column(nullable = false, updatable = false)
+	private LocalDateTime createdAt = LocalDateTime.now();
+
 	public Long getIdsale() {
 		return idsale;
 	}
+
 	public void setIdsale(Long idsale) {
 		this.idsale = idsale;
 	}
+
 	public PaymentMethod getPaymentMethod() {
 		return paymentMethod;
 	}
+
 	public void setPaymentMethod(PaymentMethod paymentMethod) {
 		this.paymentMethod = paymentMethod;
 	}
+
 	public SaleStatus getStatus() {
 		return status;
 	}
+
 	public void setStatus(SaleStatus status) {
 		this.status = status;
 	}
+
+	public BigDecimal getTotal() {
+		return total;
+	}
+
+	public void setTotal(BigDecimal total) {
+		this.total = total;
+	}
+
 	public Customer getCustomer() {
 		return customer;
 	}
+
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
 	}
+
 	public User getUser() {
 		return user;
 	}
+
 	public void setUser(User user) {
 		this.user = user;
 	}
+
 	public Product getProduct() {
 		return product;
 	}
+
 	public void setProduct(Product product) {
 		this.product = product;
 	}
+
 	public LocalDateTime getCreated_at() {
 		return createdAt;
 	}
+
 	public void setCreated_at(LocalDateTime created_at) {
 		this.createdAt = created_at;
 	}
-    
-    
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
 }

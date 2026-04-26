@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +25,10 @@ import com.jamir.easycrm.service.ProductService;
 
 @Controller
 public class ProductController {
-	
+
 	@Autowired
 	private ProductService ps;
-	
+
 	@GetMapping("/produtos")
 	public ModelAndView product() {
 		ModelAndView mv = new ModelAndView("/produtos/page");
@@ -35,41 +36,55 @@ public class ProductController {
 		mv.addObject("products", loadedProdutos);
 		return mv;
 	}
+
+	@GetMapping("/produtos/findone/{id}")
+	public ResponseEntity<?> findOne(@PathVariable(name = "id") Long id) {
+		
+		return ps.findById(id).map(productFound -> {
+			return ResponseEntity.ok(productFound);
+		}).orElseGet(() -> {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		});
+	}
+
 	@PostMapping("/produtos/create")
 	public String create(@ModelAttribute Product p, @RequestParam("imgFile") MultipartFile imgFile) {
 		ps.create(p, imgFile);
 		return "redirect:/produtos";
 	}
+
 	@GetMapping("/produtos/update/{id}")
 	public ModelAndView update(@PathVariable(name = "id") Long id) {
-		return ps.findById(id).map(productFound ->{
+		return ps.findById(id).map(productFound -> {
 			ModelAndView mv = new ModelAndView("produtos/update");
 			mv.addObject("p", productFound);
 			return mv;
-		}).orElseGet(()->{
+		}).orElseGet(() -> {
 			return new ModelAndView("redirect:/produtos");
-		});		
+		});
 	}
+
 	@PostMapping("/produtos/update/{id}")
 	public String update(@PathVariable(name = "id") Long id, Product p) {
-		return ps.update(id, p).map(updatedProduct ->{
+		return ps.update(id, p).map(updatedProduct -> {
 			return "redirect:/produtos";
-		}).orElseGet(()->{
+		}).orElseGet(() -> {
 			String msg = "Falha ao atualizar produto";
 			return "redirect:/produtos?msg=" + msg;
-		});		
+		});
 	}
+
 	@DeleteMapping("/produtos/delete/{id}")
 	public ResponseEntity<Map<String, String>> delete(@PathVariable(name = "id") Long id) {
 		Map<String, String> res = new HashMap();
 		return ps.delete(id).map(removedProduct -> {
 
-            res.put("msg", "Produto removido com sucesso");
-            return ResponseEntity.status(HttpStatus.OK).body(res);
-		}).orElseGet(()->{
+			res.put("msg", "Produto removido com sucesso");
+			return ResponseEntity.status(HttpStatus.OK).body(res);
+		}).orElseGet(() -> {
 
-            res.put("msg", "Falha ao remover produto");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+			res.put("msg", "Falha ao remover produto");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
 		});
 	}
 }

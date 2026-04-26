@@ -1,5 +1,11 @@
 package com.jamir.easycrm.repository;
 
-public class SaleRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.jamir.easycrm.model.Sale;
+
+@Repository
+public interface SaleRepository extends JpaRepository<Sale, Long>{
 
 }

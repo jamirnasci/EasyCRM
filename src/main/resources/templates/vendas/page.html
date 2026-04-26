@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clientes</title>
+    <title>Vendas</title>
     <th:block th:replace="~{partials/headers :: headers}"></th:block>
     <link rel="stylesheet" th:href="@{/css/global.css}">
 </head>
@@ -72,39 +72,23 @@
 	                        <tr>
 	                            <th class="ps-4">ID / Data</th>
 	                            <th>Cliente</th>
-	                            <th>Produtos/Serviços</th>
 	                            <th>Total</th>
 	                            <th>Status</th>
 	                            <th class="text-end pe-4">Ações</th>
 	                        </tr>
 	                    </thead>
-	                    <tbody>
-	                        <tr>
+	                    <tbody>	                        
+	                        <tr th:each="sale : ${sales}">
 	                            <td class="ps-4">
-	                                <div class="fw-bold">#1024</div>
-	                                <small class="text-muted">23/04/2026</small>
+	                                <div class="fw-bold" th:text="${sale.idsale}"></div>
+	                                <small class="text-muted" th:text="${#temporals.format(sale.createdAt, 'dd/MM/yyyy hh:mm')}"></small>
 	                            </td>
-	                            <td>João Silva</td>
-	                            <td>1x Licença Pro, 2x Consultoria</td>
-	                            <td class="fw-bold text-dark">R$ 799,90</td>
-	                            <td><span class="badge rounded-pill bg-success">Pago</span></td>
+	                            <td th:text="${sale.customer.name}"></td>
+	                            <td class="fw-bold text-dark" th:text="'R$ ' + ${sale.total}"></td>
+	                            <td><span class="badge rounded-pill bg-warning text-dark" th:text="${sale.status}"></span></td>
 	                            <td class="text-end pe-4">
 	                                <button class="btn btn-sm btn-light" title="Ver Recibo"><i class="fa-solid fa-file-invoice-dollar"></i></button>
-	                                <button class="btn btn-sm btn-light text-primary"><i class="fa-solid fa-pen"></i></button>
-	                            </td>
-	                        </tr>
-	                        <tr>
-	                            <td class="ps-4">
-	                                <div class="fw-bold">#1025</div>
-	                                <small class="text-muted">23/04/2026</small>
-	                            </td>
-	                            <td>Maria Oliveira</td>
-	                            <td>1x Automação Excel</td>
-	                            <td class="fw-bold text-dark">R$ 250,00</td>
-	                            <td><span class="badge rounded-pill bg-warning text-dark">Pendente</span></td>
-	                            <td class="text-end pe-4">
-	                                <button class="btn btn-sm btn-light" title="Ver Recibo"><i class="fa-solid fa-file-invoice-dollar"></i></button>
-	                                <button class="btn btn-sm btn-light text-primary"><i class="fa-solid fa-pen"></i></button>
+	                                <a class="btn btn-sm btn-light text-primary" th:href="'/vendas/update/' + ${sale.idsale}"><i class="fa-solid fa-pen"></i></a>
 	                            </td>
 	                        </tr>
 	                    </tbody>
@@ -122,53 +106,42 @@
 	                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 	            </div>
 	            <div class="modal-body p-4">
-	                <form id="formVenda">
+	                <form id="formVenda" action="/vendas/create" method="POST">
 	                    <div class="row g-3">
-	                        <div class="col-md-6">
+	                        <div class="col-md-12">
 	                            <label class="form-label small fw-bold">Selecionar Cliente</label>
-	                            <select class="form-select" required>
+	                            <select class="form-select" name="customer" required>
 	                                <option selected disabled>Escolha um cliente...</option>
-	                                <option>João Silva</option>
-	                                <option>Maria Oliveira</option>
+	                                <option th:each="c: ${customers}" th:text="${c.name}" th:value="${c.idcustomer}"></option>
 	                            </select>
-	                        </div>
-	                        <div class="col-md-6">
-	                            <label class="form-label small fw-bold">Data da Venda</label>
-	                            <input type="date" class="form-control" value="2026-04-23">
 	                        </div>
 	                        <div class="col-12">
 	                            <label class="form-label small fw-bold">Adicionar Produtos</label>
 	                            <div class="input-group">
-	                                <select class="form-select">
+	                                <select class="form-select" id="productsSelect" name="product">
 	                                    <option selected disabled>Selecione o produto...</option>
-	                                    <option>Licença EasyCRM Pro - R$ 499,90</option>
-	                                    <option>Consultoria Técnica - R$ 150,00</option>
+	                                    <option th:each="p : ${products}" th:text="${p.name}" th:value="${p.idproduct}"></option>
 	                                </select>
-	                                <input type="number" class="form-control w-25" placeholder="Qtd" value="1">
-	                                <button class="btn btn-outline-primary" type="button">Adicionar</button>
+	                                <input type="number" class="form-control w-25" placeholder="Qtd" value="1" min="1" id="quantity" name="quantity">
+	                                <button class="btn btn-outline-primary" type="button" id="calcBtn">Calcular</button>
 	                            </div>
 	                        </div>
 	                        <div class="col-md-6">
 	                            <label class="form-label small fw-bold">Forma de Pagamento</label>
-	                            <select class="form-select">
-	                                <option>Pix</option>
-	                                <option>Cartão de Crédito</option>
-	                                <option>Boleto</option>
-	                                <option>Transferência</option>
+	                            <select class="form-select" name="paymentMethod">
+	                                <option th:each="pm : ${paymentMethods}" th:text="${pm}" th:value="${pm}"></option>
 	                            </select>
 	                        </div>
 	                        <div class="col-md-6">
 	                            <label class="form-label small fw-bold">Status Inicial</label>
-	                            <select class="form-select">
-	                                <option>Pago</option>
-	                                <option>Pendente</option>
-	                                <option>Cancelado</option>
+	                            <select class="form-select" name="status">
+	                                <option th:each="ss : ${saleStatus}" th:text="${ss}" th:value="${ss}"></option>
 	                            </select>
 	                        </div>
 	                        <div class="col-12 mt-4">
 	                            <div class="bg-light p-3 rounded d-flex justify-content-between align-items-center">
 	                                <span class="fw-bold">Valor Total Estimado:</span>
-	                                <span class="h4 mb-0 text-primary fw-bold">R$ 0,00</span>
+	                                <span class="d-flex align-items-center h3 mb-0 text-primary fw-bold">R$ <input style="font-size: 0.8em; font-weight: bold; text-align: right;" type="number" class="form-control m-1 text-primary" id="valorFinal" name="total"></span>
 	                            </div>
 	                        </div>
 	                        <div class="col-12 mt-4 d-flex justify-content-end gap-2">
@@ -182,5 +155,5 @@
 	    </div>
 	</div>
 </body>
-
+<script th:src="@{/js/vendas.js}"></script>
 </html>

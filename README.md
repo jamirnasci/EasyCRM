@@ -1,3 +1,5 @@
+application.properties
+
 ```
 spring.application.name=easycrm
 spring.datasource.url=jdbc:mysql://localhost:3306/{DB_DATABASE}
