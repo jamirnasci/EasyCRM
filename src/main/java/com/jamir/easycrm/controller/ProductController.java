@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.jamir.easycrm.model.Customer;
 import com.jamir.easycrm.model.CustomerStatus;
 import com.jamir.easycrm.model.Product;
+import com.jamir.easycrm.model.ProductCategory;
 import com.jamir.easycrm.service.ProductService;
 
 @Controller
@@ -34,6 +34,7 @@ public class ProductController {
 		ModelAndView mv = new ModelAndView("/produtos/page");
 		List<Product> loadedProdutos = ps.findAll();
 		mv.addObject("products", loadedProdutos);
+		mv.addObject("categories", ProductCategory.values());
 		return mv;
 	}
 
@@ -58,6 +59,7 @@ public class ProductController {
 		return ps.findById(id).map(productFound -> {
 			ModelAndView mv = new ModelAndView("produtos/update");
 			mv.addObject("p", productFound);
+			mv.addObject("categories", ProductCategory.values());
 			return mv;
 		}).orElseGet(() -> {
 			return new ModelAndView("redirect:/produtos");

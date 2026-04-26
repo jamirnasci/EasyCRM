@@ -2,7 +2,10 @@ package com.jamir.easycrm.model;
 
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalTime;
+
+import org.springframework.cglib.core.Local;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +24,7 @@ public class Interaction {
 	private Long idinteraction;
 		
 	@Column(nullable = false)
-	private Date date;
+	private LocalDate date;
 	
 	@Column(nullable = false)
 	private LocalTime time;
@@ -29,6 +32,10 @@ public class Interaction {
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private InteractionType type;
+
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private InteractionStatus status = InteractionStatus.PENDENTE;
 	
 	@Column()
 	private String description;
@@ -41,11 +48,11 @@ public class Interaction {
 		this.idinteraction = idinteraction;
 	}
 
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 
@@ -96,4 +103,12 @@ public class Interaction {
 	@ManyToOne()
 	@JoinColumn(name = "user_id")
 	private User user;
+
+	public InteractionStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(InteractionStatus status) {
+		this.status = status;
+	}
 }

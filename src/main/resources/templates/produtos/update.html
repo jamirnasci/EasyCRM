@@ -11,31 +11,41 @@
 
 <body>
     <div th:replace="~{partials/sideBar :: sideBar}"></div>
-	<div class="container-fluid pt-4">
-	    <div class="d-flex justify-content-between align-items-center mb-4">
-	        <h2 class="h4 fw-bold">Atualizar Produto</h2>
-	    </div>
-		<form th:action="'/produtos/update/' + ${p.idproduct}" method="POST" id="formProduto" enctype="multipart/form-data">
+    <div class="container-fluid pt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h4 fw-bold">Atualizar Produto</h2>
+        </div>
+        <form th:action="'/produtos/update/' + ${p.idproduct}" method="POST" id="formProduto"
+            enctype="multipart/form-data">
             <div class="row g-3">
                 <div class="col-md-8">
                     <label class="form-label small fw-bold">Nome do Produto/Serviço</label>
-                    <input th:value="${p.name}" type="text" class="form-control" name="name" placeholder="Ex: Planilha de Automação" required>
+                    <input th:value="${p.name}" type="text" class="form-control" name="name"
+                        placeholder="Ex: Planilha de Automação" required>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label small fw-bold">Preço de Venda (R$)</label>
-                    <input th:value="${p.price}" type="number" name="price" step="0.01" class="form-control" placeholder="0,00">
+                    <input th:value="${p.price}" type="number" name="price" step="0.01" class="form-control"
+                        placeholder="0,00">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label small fw-bold">Estoque</label>
                     <input th:value="${p.quantity}" type="number" name="quantity" class="form-control" placeholder="0">
                 </div>
-				<div class="col-12">
-				    <label class="form-label small fw-bold">Imagem</label>
-				    <input class="form-control" type="file" name="imgFile"/>
-				</div>
+                <div class="col-md-4">
+                    <label class="form-label small fw-bold">Categoria</label>
+                    <select name="category" class="form-select" required>
+                        <option th:each="c : ${categories}" th:value="${c}" th:text="${c}" th:selected="${p.category == c}"></option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label class="form-label small fw-bold">Imagem</label>
+                    <input class="form-control" type="file" name="imgFile" />
+                </div>
                 <div class="col-12">
                     <label class="form-label small fw-bold">Descrição</label>
-                    <textarea th:text="${p.name}" class="form-control" name="description" rows="3" placeholder="Detalhes técnicos ou especificações..."></textarea>
+                    <textarea th:text="${p.name}" class="form-control" name="description" rows="3"
+                        placeholder="Detalhes técnicos ou especificações..."></textarea>
                 </div>
                 <div class="col-12 mt-4">
                     <hr>
@@ -47,7 +57,7 @@
             </div>
         </form>
 
-	</div>
+    </div>
 
 </body>
 

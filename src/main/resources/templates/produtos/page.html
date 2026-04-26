@@ -62,7 +62,7 @@
 	                                <div class="fw-bold" th:text="${p.name}"></div>
 	                                <small class="text-muted">SKU: CRM-PRO-01</small>
 	                            </td>
-	                            <td><span class="badge bg-info text-dark"></span></td>
+	                            <td><span class="badge bg-info text-dark" th:text="${p.category}"></span></td>
 	                            <td th:text="${p.price}"></td>
 	                            <td><span class="text-success fw-bold" th:text="${p.quantity}">99+</span></td>
 	                            <td class="text-end pe-4">
@@ -102,6 +102,13 @@
 	                        <div class="col-md-4">
 	                            <label class="form-label small fw-bold">Estoque</label>
 	                            <input type="number" name="quantity" class="form-control" placeholder="0">
+	                        </div>
+							<div class="col-md-4">
+	                            <label class="form-label small fw-bold">Categoria</label>
+	                            <select name="category" class="form-select" required>
+									<option value="" selected>Selectione uma categoria</option>
+									<option th:each="c : ${categories}" th:value="${c}" th:text="${c}"></option>
+								</select>
 	                        </div>
 							<div class="col-12">
 							    <label class="form-label small fw-bold">Imagem</label>

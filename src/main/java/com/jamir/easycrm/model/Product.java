@@ -7,6 +7,8 @@ import org.springframework.data.annotation.CreatedDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,6 +28,12 @@ public class Product {
     @Positive
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
+
+	@NotNull
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private ProductCategory category;
+
     @Column(nullable = false)
     private String description;
     @Column()
@@ -78,6 +86,12 @@ public class Product {
 	}
 	public void setCreated_at(LocalDateTime created_at) {
 		this.created_at = created_at;
+	}
+	public ProductCategory getCategory() {
+		return category;
+	}
+	public void setCategory(ProductCategory category) {
+		this.category = category;
 	}
     
 }
