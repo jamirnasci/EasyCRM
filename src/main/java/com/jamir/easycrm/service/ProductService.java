@@ -57,6 +57,25 @@ public class ProductService {
 		}
 	}
 
+	public void replaceImg(Product p, MultipartFile imgFile) {
+		String filePath = p.getImgUrl();
+		if (filePath.startsWith("/")) {
+			filePath = filePath.substring(1);
+		}
+		String basePath = System.getProperty("user.dir");
+		File oldImgFile = new File(basePath, filePath);
+
+		if (oldImgFile.exists()) {
+			try {
+				imgFile.transferTo(oldImgFile);
+			} catch (IllegalStateException | IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			throw new RuntimeException("Falha ao substituir imagem do produto");
+		}
+	}
+
 	public Optional<Product> decrementQuantity(Product p, int quantity) {
 		return pr.findById(p.getIdproduct()).map(product -> {
 			if (product.getQuantity() >= quantity) {
@@ -108,21 +127,21 @@ public class ProductService {
 
 	}
 
-	public Optional<Product> update(Long idproduct, Product p, MultipartFile imgFile) {
+	public Optional<Product> update(Long idproduct, Product newProduct, MultipartFile imgFile) {
 		return pr.findById(idproduct).map(productFound -> {
-			if (p.getImgUrl() != null) {
-				deleteImg(productFound);
+			if (newProduct.getImgUrl() != null && imgFile != null && !imgFile.isEmpty()) {
+				replaceImg(productFound, imgFile);
 			}
-			if (imgFile != null) {
+			if(newProduct.getImgUrl() == null && imgFile != null && !imgFile.isEmpty() && productFound.getImgUrl() != null) {
+				deleteImg(productFound);
 				String fileName = createProductImage(imgFile);
 				productFound.setImgUrl("/uploads/products/" + fileName);
 			}
-			productFound.setName(p.getName());
-			productFound.setDescription(p.getDescription());
-			productFound.setPrice(p.getPrice());
-			productFound.setCategory(p.getCategory());
-			productFound.setQuantity(p.getQuantity());
-			productFound.setName(p.getName());
+			productFound.setName(newProduct.getName());
+			productFound.setDescription(newProduct.getDescription());
+			productFound.setPrice(newProduct.getPrice());
+			productFound.setCategory(newProduct.getCategory());
+			productFound.setQuantity(newProduct.getQuantity());
 			return pr.save(productFound);
 		});
 	}
