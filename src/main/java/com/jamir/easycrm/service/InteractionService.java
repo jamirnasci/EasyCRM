@@ -30,4 +30,18 @@ public class InteractionService {
             return ir.findBetweenDates(d1, d2);
         }
     }
+    public Optional<Interaction> findById(Long id) {
+        return ir.findById(id);
+    }
+    public Optional<Interaction> update(Long id, Interaction i) {
+        return ir.findById(id).map(existingInteraction -> {
+            existingInteraction.setDate(i.getDate());
+            existingInteraction.setTime(i.getTime());
+            existingInteraction.setType(i.getType());
+            existingInteraction.setStatus(i.getStatus());
+            existingInteraction.setDescription(i.getDescription());
+            existingInteraction.setCustomer(i.getCustomer());
+            return ir.save(existingInteraction);
+        });
+    }
 }

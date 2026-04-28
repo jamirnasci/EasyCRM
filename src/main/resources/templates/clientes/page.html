@@ -60,14 +60,26 @@
                                 </td>
                                 <td th:text="${c.email}"></td>
                                 <td th:text="${c.phone}"></td>
-                                <td><span class="badge bg-success" th:text="${c.status}"></span></td>
+                                <td>
+                                <span class="badge rounded-pill"
+                                    th:classappend="${
+                                        c.status?.name() == 'LEAD' ? 'bg-info' :
+                                        c.status?.name() == 'CONTATADO' ? 'bg-warning text-dark' :
+                                        c.status?.name() == 'CONVERTIDO' ? 'bg-success' :
+                                        c.status?.name() == 'QUALIFICADO' ? 'bg-primary' : 'bg-danger'}"
+                                    th:text="${c.status}">
+                                    Status
+                                </span>
+                                </td>
                                 <td class="text-end pe-4">
-                                    <a class="btn btn-sm btn-light text-primary" th:href="'/clientes/update/' + ${c.idcustomer}">
-										<i class="fa-solid fa-pen"></i>
-									</a>
-                                    <button class="btn btn-sm btn-light text-danger" th:customername="${c.name}" th:idcustomer="${c.idcustomer}" onClick="deleteHandler(this)">
-										<i class="fa-solid fa-trash"></i>
-									</button>
+                                    <a class="btn btn-sm btn-light text-primary"
+                                        th:href="'/clientes/update/' + ${c.idcustomer}">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </a>
+                                    <button class="btn btn-sm btn-light text-danger" th:customername="${c.name}"
+                                        th:idcustomer="${c.idcustomer}" onClick="deleteHandler(this)">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
@@ -89,11 +101,13 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold">Nome Completo</label>
-                                <input type="text" class="form-control" name="name" placeholder="Ex: Maria Oliveira" required>
+                                <input type="text" class="form-control" name="name" placeholder="Ex: Maria Oliveira"
+                                    required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold">E-mail</label>
-                                <input type="email" class="form-control" name="email" placeholder="maria@email.com" required>
+                                <input type="email" class="form-control" name="email" placeholder="maria@email.com"
+                                    required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold">Telefone/WhatsApp</label>
@@ -101,17 +115,19 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold">CPF/CNPJ</label>
-                                <input type="text" class="form-control" name="cpf" placeholder="000.000.000-00" maxLength="11">
+                                <input type="text" class="form-control" name="cpf" placeholder="000.000.000-00"
+                                    maxLength="11">
                             </div>
-							<div class="col-md-6">
-							    <label class="form-label small fw-bold">Status</label>
-							    <select class="form-select" name="status">
-									<option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
-								</select>
-							</div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">Status</label>
+                                <select class="form-select" name="status">
+                                    <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+                                </select>
+                            </div>
                             <div class="col-12">
                                 <label class="form-label small fw-bold">Descrição</label>
-                                <textarea rows="5" class="form-control" name="description" placeholder="Rua, Número, Bairro..."></textarea>
+                                <textarea rows="5" class="form-control" name="description"
+                                    placeholder="Rua, Número, Bairro..."></textarea>
                             </div>
                             <div class="col-12 mt-4">
                                 <hr>
@@ -129,4 +145,5 @@
     </div>
 </body>
 <script th:src="@{/js/clientes.js}"></script>
+
 </html>

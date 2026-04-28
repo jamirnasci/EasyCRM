@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clientes</title>
+    <title>Produtos</title>
     <th:block th:replace="~{partials/headers :: headers}"></th:block>
     <link rel="stylesheet" th:href="@{/css/global.css}">
 </head>
@@ -27,17 +27,15 @@
 	                        <span class="input-group-text bg-white border-end-0">
 	                            <i class="fa-solid fa-magnifying-glass text-muted"></i>
 	                        </span>
-	                        <input type="text" class="form-control border-start-0" placeholder="Pesquisar por nome, SKU ou categoria...">
+	                        <input id="search" type="text" class="form-control border-start-0" placeholder="Digite o nome do produto">
 	                    </div>
 	                </div>
 	                <div class="col-md-4 text-end">
-	                    <select class="form-select d-inline-block w-auto me-2">
-	                        <option selected>Categoria</option>
-	                        <option>Eletrônicos</option>
-	                        <option>Serviços</option>
-	                        <option>Software</option>
+	                    <select class="form-select d-inline-block w-auto me-2" id="category">
+							<option value="" selected>Selecione uma categoria</option>
+	                        <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}">Categoria</option>
 	                    </select>
-	                    <button class="btn btn-outline-secondary">Filtrar</button>
+	                    <button class="btn btn-outline-secondary" id="filterBtn">Filtrar</button>
 	                </div>
 	            </div>
 	        </div>
@@ -60,11 +58,11 @@
 	                        <tr th:each="p : ${products}">
 	                            <td class="ps-4">
 	                                <div class="fw-bold" th:text="${p.name}"></div>
-	                                <small class="text-muted">SKU: CRM-PRO-01</small>
+	                                <small class="text-muted"></small>
 	                            </td>
 	                            <td><span class="badge bg-info text-dark" th:text="${p.category}"></span></td>
-	                            <td th:text="${p.price}"></td>
-	                            <td><span class="text-success fw-bold" th:text="${p.quantity}">99+</span></td>
+	                            <td class="fw-bold text-dark" th:text="${#numbers.formatCurrency(p.price)}"></td>
+	                            <td><span class="text-success fw-bold" th:text="${p.quantity}"></span></td>
 	                            <td class="text-end pe-4">
 	                                <a class="btn btn-sm btn-light text-primary" th:href="'/produtos/update/' + ${p.idproduct}">
 										<i class="fa-solid fa-pen"></i>

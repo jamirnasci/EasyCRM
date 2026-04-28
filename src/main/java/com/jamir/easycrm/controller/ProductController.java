@@ -30,10 +30,17 @@ public class ProductController {
 	private ProductService ps;
 
 	@GetMapping("/produtos")
-	public ModelAndView product() {
+	public ModelAndView product(
+		@RequestParam(name = "search", required = false) String search,
+		@RequestParam(name = "category", required = false) ProductCategory category
+	) {
 		ModelAndView mv = new ModelAndView("/produtos/page");
-		List<Product> loadedProdutos = ps.findAll();
-		mv.addObject("products", loadedProdutos);
+		if(search != null || category != null) {
+			List<Product> searchResult = ps.search(search, category);
+			mv.addObject("products", searchResult);
+		} else {
+			mv.addObject("products", ps.findAll());
+		}
 		mv.addObject("categories", ProductCategory.values());
 		return mv;
 	}

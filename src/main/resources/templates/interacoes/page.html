@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Clientes</title>
+	<title>Interações</title>
 	<th:block th:replace="~{partials/headers :: headers}"></th:block>
 	<link rel="stylesheet" th:href="@{/css/global.css}">
 </head>
@@ -75,12 +75,16 @@
 									<div th:text="${in.description}" class="text-truncate" style="max-width: 250px;">
 									</div>
 								</td>
-								<td><span th:text="${in.status}" class="badge bg-warning text-dark"></span></td>
+								<td>
+									<span th:text="${in.status}" th:class="'badge rounded-pill ' + 
+            							(${in.status.name() == 'FINALIZADA'} ? 'bg-success' : 
+            							(${in.status.name() == 'PENDENTE'} ? 'bg-warning text-dark' : 'bg-danger'))">
+									</span>
+								</td>
 								<td class="text-end pe-4">
-									<button class="btn btn-sm btn-outline-success" title="Concluir"><i
-											class="fa-solid fa-check"></i></button>
-									<button class="btn btn-sm btn-light text-primary"><i
-											class="fa-solid fa-pen"></i></button>
+									<a class="btn btn-sm btn-light text-primary" th:href="'/interacoes/update/' + ${in.idinteraction}">
+										<i class="fa-solid fa-pen"></i>
+									</a>
 								</td>
 							</tr>
 						</tbody>
@@ -147,4 +151,5 @@
 	</div>
 	<script th:src="@{/js/interacoes.js}"></script>
 </body>
+
 </html>

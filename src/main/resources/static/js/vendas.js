@@ -26,3 +26,18 @@ productsSelect.addEventListener('change', findProduct)
 quantity.addEventListener('change', ()=>{
     valorFinal.value = Number(loadedProduct.price) * Number(quantity.value)
 })
+
+const d1 = document.getElementById('date1')
+const d2 = document.getElementById('date2')
+const filterBtn = document.getElementById('filterBtn')
+
+function filterByDates(){
+    if(!d1.value || !d2.value){
+        alert('Selecione as datas para a filtragem')
+        return
+    }
+    let url = `/vendas?d1=${d1.value}&d2=${d2.value}`
+    location.href = url
+}
+
+filterBtn.addEventListener('click', filterByDates)

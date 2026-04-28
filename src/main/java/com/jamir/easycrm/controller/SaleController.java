@@ -1,12 +1,18 @@
 package com.jamir.easycrm.controller;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jamir.easycrm.config.UserPrincipal;
@@ -29,11 +35,31 @@ public class SaleController {
 	private ProductService ps;
 
 	@GetMapping("/vendas")
-	public ModelAndView vendas() {
+	public ModelAndView vendas(
+			@RequestParam(name = "d1", required = false) LocalDate d1,
+			@RequestParam(name = "d2", required = false) LocalDate d2) {
 		ModelAndView mv = new ModelAndView("vendas/page");
-		mv.addObject("sales", ss.findAll());
+		BigDecimal total = BigDecimal.ZERO;
+		if (d1 != null && d2 != null) {
+			List<Sale> salesPerDate = ss.findBeetweenDates(d1, d2);
+			total = ss.sumTotalSales(salesPerDate);
+			mv.addObject("sales", salesPerDate);
+			mv.addObject("total", total);
+			mv.addObject("quantity", salesPerDate.size());
+			mv.addObject("negociacaoCount", ss.sumByStatus(salesPerDate, SaleStatus.EM_NEGOCIACAO));
+			mv.addObject("finalizadaCount", ss.sumByStatus(salesPerDate, SaleStatus.FINALIZADA));
+			mv.addObject("d1", d1);
+			mv.addObject("d2", d2);
+		} else {
+			mv.addObject("sales", ss.findAll());
+		}
+		List<Sale> sales = ss.findAll();
+		mv.addObject("total", ss.sumTotalSales(sales));
+		mv.addObject("quantity", sales.size());
 		mv.addObject("customers", cs.findAll());
 		mv.addObject("products", ps.findAll());
+		mv.addObject("negociacaoCount", ss.sumByStatus(sales, SaleStatus.EM_NEGOCIACAO));
+		mv.addObject("finalizadaCount", ss.sumByStatus(sales, SaleStatus.FINALIZADA));
 		mv.addObject("paymentMethods", PaymentMethod.values());
 		mv.addObject("saleStatus", SaleStatus.values());
 		return mv;
@@ -65,13 +91,14 @@ public class SaleController {
 			return new ModelAndView("redirect:/vendas");
 		});
 	}
+
 	@PostMapping("/vendas/update/{id}")
 	public String update(@PathVariable(name = "id") Long id, Sale s) {
-		return ss.update(id, s).map(updatedSale ->{
+		return ss.update(id, s).map(updatedSale -> {
 			return "redirect:/vendas";
-		}).orElseGet(()->{
+		}).orElseGet(() -> {
 			String msg = "Falha ao atualizar venda";
 			return "redirect:/vendas?msg=" + msg;
-		});		
+		});
 	}
 }

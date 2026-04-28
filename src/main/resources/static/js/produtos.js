@@ -17,3 +17,23 @@ async function deleteHandler(tag){
 	}
 	location.reload()
 }
+
+function searchHandler(){
+	const search = document.getElementById('search').value
+	const category = document.getElementById('category').value
+	let url = "/produtos?"
+	if(!search && !category){
+		alert('Digite um nome ou categoria para pesquisa')
+		return
+	}
+	if(search){
+		url += "search=" + search
+	}
+	if(category){
+		url += `${search ? '&' : ''}category=${category}`
+	}
+	location.href = url
+}
+
+const filterBtn = document.getElementById('filterBtn')
+filterBtn.addEventListener('click', searchHandler)

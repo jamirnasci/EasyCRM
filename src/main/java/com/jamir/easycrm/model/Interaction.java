@@ -1,6 +1,5 @@
 package com.jamir.easycrm.model;
 
-
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -22,13 +21,13 @@ public class Interaction {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idinteraction;
-		
+
 	@Column(nullable = false)
 	private LocalDate date;
-	
+
 	@Column(nullable = false)
 	private LocalTime time;
-	
+
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private InteractionType type;
@@ -36,10 +35,18 @@ public class Interaction {
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private InteractionStatus status = InteractionStatus.PENDENTE;
-	
+
 	@Column()
 	private String description;
-	
+
+	@ManyToOne()
+	@JoinColumn(name = "customer_id")
+	private Customer customer;
+
+	@ManyToOne()
+	@JoinColumn(name = "user_id")
+	private User user;
+
 	public Long getIdinteraction() {
 		return idinteraction;
 	}
@@ -95,14 +102,6 @@ public class Interaction {
 	public void setUser(User user) {
 		this.user = user;
 	}
-
-	@ManyToOne()
-	@JoinColumn(name = "customer_id")
-	private Customer customer;
-	
-	@ManyToOne()
-	@JoinColumn(name = "user_id")
-	private User user;
 
 	public InteractionStatus getStatus() {
 		return status;

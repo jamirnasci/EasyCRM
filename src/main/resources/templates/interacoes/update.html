@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atualizar Interação</title>
+    <th:block th:replace="~{partials/headers :: headers}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+</head>
+
+<body>
+    <div th:replace="~{partials/sideBar :: sideBar}"></div>
+    <div class="container-fluid pt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h4 fw-bold">Atualizar interação</h2>
+        </div>
+
+        <div class="card border-0 bg-light">
+            <div class="card-body p-0">
+                <form id="formInteracao" th:action="'/interacoes/update/' + ${interaction.idinteraction}" method="POST">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Cliente</label>
+                            <select class="form-select" name="customer" required>                                
+                                <option th:each="c : ${customers}" th:value="${c.idcustomer}" th:text="${c.name}" th:select="${interaction.customer.idcustomer == c.idcustomer}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Data</label>
+                            <input th:value="${interaction.date}" type="date" name="date" class="form-control" value="2026-04-24">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Horário</label>
+                            <input th:value="${interaction.time}" type="time" name="time" class="form-control" value="14:30">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Tipo de interação</label>
+                            <select class="form-select" name="type" required>
+                                <option th:each="t : ${types}" th:value="${t}" th:text="${t}" th:select="${interaction.type == t}"></option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Status</label>
+                            <select class="form-select" name="status" required>
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}" th:select="${interaction.status == s}"></option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Notas / Objetivo</label>
+                            <textarea th:text="${interaction.description}" class="form-control" name="description" rows="3"
+                                placeholder="O que será discutido?"></textarea>
+                        </div>
+                        <div class="col-12 mt-4 d-flex justify-content-end gap-2">
+                            <a type="button" class="btn btn-light" href="/interacoes">Cancelar</a>
+                            <button type="submit" class="btn btn-primary px-4">Agendar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/js/interacoes.js}"></script>
+</body>
+
+</html>

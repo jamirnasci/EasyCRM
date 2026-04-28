@@ -1,6 +1,7 @@
 package com.jamir.easycrm.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -35,6 +36,9 @@ public class Sale {
 	@Column(nullable = false)
 	private BigDecimal total;
 
+	@Column()
+	private LocalDate date = LocalDate.now();
+
 	@ManyToOne()
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
@@ -50,6 +54,16 @@ public class Sale {
 	@CreatedDate
 	@Column(nullable = false, updatable = false)
 	private LocalDateTime createdAt = LocalDateTime.now();
+
+	
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
 
 	public Long getIdsale() {
 		return idsale;
