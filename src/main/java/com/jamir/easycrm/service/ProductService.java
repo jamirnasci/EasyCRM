@@ -42,6 +42,21 @@ public class ProductService {
 		return pr.findById(id);
 	}
 
+	public void deleteImg(Product p) {
+		String filePath = p.getImgUrl();
+		if (filePath.startsWith("/")) {
+			filePath = filePath.substring(1);
+		}
+		String basePath = System.getProperty("user.dir");
+		File imgFile = new File(basePath, filePath);
+
+		if (imgFile.exists()) {
+			if (!imgFile.delete()) {
+				throw new RuntimeException("Falha ao remover imagem do produto");
+			}
+		}
+	}
+
 	public Optional<Product> decrementQuantity(Product p, int quantity) {
 		return pr.findById(p.getIdproduct()).map(product -> {
 			if (product.getQuantity() >= quantity) {
@@ -66,7 +81,7 @@ public class ProductService {
 		String originalName = imgFile.getOriginalFilename();
 		String extension = originalName.substring(originalName.lastIndexOf("."));
 
-		String fileName = UUID.randomUUID().toString();
+		String fileName = UUID.randomUUID().toString() + extension;
 		Path uploadPath = Paths.get("uploads/products/");
 
 		if (!Files.exists(uploadPath)) {
@@ -93,8 +108,15 @@ public class ProductService {
 
 	}
 
-	public Optional<Product> update(Long idproduct, Product p) {
+	public Optional<Product> update(Long idproduct, Product p, MultipartFile imgFile) {
 		return pr.findById(idproduct).map(productFound -> {
+			if (p.getImgUrl() != null) {
+				deleteImg(productFound);
+			}
+			if (imgFile != null) {
+				String fileName = createProductImage(imgFile);
+				productFound.setImgUrl("/uploads/products/" + fileName);
+			}
 			productFound.setName(p.getName());
 			productFound.setDescription(p.getDescription());
 			productFound.setPrice(p.getPrice());
@@ -107,18 +129,7 @@ public class ProductService {
 
 	public Optional<Product> delete(Long idcustomer) {
 		return pr.findById(idcustomer).map(productFound -> {
-			String filePath = productFound.getImgUrl();
-			if (filePath.startsWith("/")) {
-				filePath = filePath.substring(1);
-			}
-			String basePath = System.getProperty("user.dir");
-			File imgFile = new File(basePath, filePath);
-
-			if (imgFile.exists()) {
-				if (!imgFile.delete()) {
-					throw new RuntimeException("Falha ao remover imagem do produto");
-				}
-			}
+			deleteImg(productFound);
 			pr.delete(productFound);
 			return productFound;
 		});

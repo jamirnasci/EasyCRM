@@ -26,13 +26,20 @@ public class UserService {
 	private UserRepository ur;
 	
 	public User createUser(User user, MultipartFile imgFile) {
+		String fileName = createUserImage(imgFile);
+		user.setImgUrl("/uploads/users/" + fileName);
+		user.setPassword(pe.encode(user.getPassword()));
+		return ur.save(user);
+	}
+
+	public String createUserImage(MultipartFile imgFile){
 		if(imgFile != null && imgFile.isEmpty()) {
 			throw new RuntimeException("Arquivo foto de perfil inválido");
 		}
 		String originalName = imgFile.getOriginalFilename();
 		String extension = originalName.substring(originalName.lastIndexOf("."));
 		
-		String fileName = UUID.randomUUID().toString();
+		String fileName = UUID.randomUUID().toString() + extension;
 		Path uploadPath = Paths.get("uploads");
 		
 		if(!Files.exists(uploadPath)) {
@@ -49,9 +56,6 @@ public class UserService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		user.setImgUrl("/uploads/" + fileName);
-		user.setPassword(pe.encode(user.getPassword()));
-		return ur.save(user);
+		return fileName;
 	}
 }

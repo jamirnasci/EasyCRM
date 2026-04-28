@@ -74,8 +74,8 @@ public class ProductController {
 	}
 
 	@PostMapping("/produtos/update/{id}")
-	public String update(@PathVariable(name = "id") Long id, Product p) {
-		return ps.update(id, p).map(updatedProduct -> {
+	public String update(@PathVariable(name = "id") Long id, Product p, @RequestParam(name = "imgFile") MultipartFile imgFile) {
+		return ps.update(id, p, imgFile).map(updatedProduct -> {
 			return "redirect:/produtos";
 		}).orElseGet(() -> {
 			String msg = "Falha ao atualizar produto";

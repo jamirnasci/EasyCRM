@@ -56,9 +56,12 @@
 	                    </thead>
 	                    <tbody>
 	                        <tr th:each="p : ${products}">
-	                            <td class="ps-4">
-	                                <div class="fw-bold" th:text="${p.name}"></div>
-	                                <small class="text-muted"></small>
+	                            <td class="ps-4 d-flex align-items-center">
+									<img th:src="${p.imgUrl}" alt="" style="height: 100px;">
+									<div class="ms-1">
+										<div class="fw-bold" th:text="${p.name}"></div>
+										<small class="text-muted"></small>
+									</div>
 	                            </td>
 	                            <td><span class="badge bg-info text-dark" th:text="${p.category}"></span></td>
 	                            <td class="fw-bold text-dark" th:text="${#numbers.formatCurrency(p.price)}"></td>
