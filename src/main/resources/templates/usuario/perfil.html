@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil</title>
+    <th:block th:replace="~{partials/headers :: headers}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <style>
+        :root {
+            --profile-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        }
+
+        body {
+            background-color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .profile-card {
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-header-bg {
+            height: 120px;
+            position: relative;
+        }
+
+        .avatar-wrapper {
+            margin-top: -75px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .avatar-img {
+            width: 150px; 
+            height: 150px; 
+            object-fit: cover;
+            border: 5px solid #fff;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .info-label {
+            color: #64748b;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .info-value {
+            color: #1e293b;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .badge-modern {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .btn-edit {
+            border-radius: 12px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div th:replace="~{partials/sideBar :: sideBar}"></div>
+    
+    <div class="container-fluid pt-5">
+        <div class="row justify-content-center">
+            <div class="">
+
+                <div class="card profile-card border-0 shadow-sm bg-white">
+                    <!-- Background do Topo -->
+                    <div class="profile-header-bg bg-primary bg-gradient"></div>
+
+                    <div class="card-body pt-0 px-4 pb-5">
+                        <!-- Avatar e Nome -->
+                        <div class="text-center avatar-wrapper mb-4">
+                            <img th:src="${user.imgUrl != null ? user.imgUrl : '/images/default-user.png'}"
+                                 class="rounded-circle avatar-img mb-3">
+                            
+                            <h3 class="fw-bold text-dark mb-1" th:text="${user.name}">Nome do Usuário</h3>
+                            <p class="text-muted" th:text="${user.email}">email@email.com</p>
+                        </div>
+
+                        <div class="row px-md-4">
+                            <!-- Coluna 1 -->
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <p class="info-label text-start">Telefone</p>
+                                    <p class="info-value text-start" th:text="${user.phone}">(00) 00000-0000</p>
+                                </div>
+                                <div class="mb-4">
+                                    <p class="info-label text-start">Nível de Acesso</p>
+                                    <span class="badge badge-modern bg-soft-primary text-primary border border-primary" 
+                                          style="--bs-bg-opacity: .1;" th:text="${user.role}">ROLE</span>
+                                </div>
+                            </div>
+
+                            <!-- Coluna 2 -->
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <p class="info-label text-start">Status da Conta</p>
+                                    <div>
+                                        <span th:class="'badge badge-modern ' + (${user.status.name() == 'ATIVO'} ? 'bg-success' : 'bg-secondary')"
+                                              th:text="${user.status}">Status</span>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <p class="info-label text-start">Membro desde</p>
+                                    <p class="info-value text-start" th:text="${#temporals.format(user.created_at, 'dd MMM, yyyy')}">
+                                        01 Jan, 2025
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4 opacity-50">
+
+                        <!-- Ações -->
+                        <div class="d-flex justify-content-center justify-content-md-start px-md-4">
+                            <a href="/usuario/update" class="btn btn-primary btn-edit shadow-sm">
+                                <i class="bi bi-pencil-square me-2"></i>Editar Perfil
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

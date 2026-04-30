@@ -3,7 +3,6 @@
         <div class="sidebar-header d-flex align-items-center text-primary">
             <i class="fa-solid fa-chart-line me-2"></i> EasyCRM
         </div>
-
         <ul class="nav flex-column mb-auto mt-3">
             <li class="nav-item">
                 <a href="/clientes" class="nav-link text-primary">
@@ -26,8 +25,13 @@
                 </a>
             </li>
             <li class="nav-item mt-4 border-top pt-2">
-                <a href="/perfil" class="nav-link text-primary">
+                <a href="/usuario/perfil" class="nav-link text-primary">
                     <i class="fa-solid fa-user-gear"></i> Meu Perfil
+                </a>
+            </li>
+            <li sec:authorize="hasRole('ADM')" class="nav-item">
+                <a href="/adm" class="nav-link text-primary">
+                    <i class="fa-solid fa-user-tie"></i> Painel ADM
                 </a>
             </li>
         </ul>

@@ -129,10 +129,10 @@ public class ProductService {
 
 	public Optional<Product> update(Long idproduct, Product newProduct, MultipartFile imgFile) {
 		return pr.findById(idproduct).map(productFound -> {
-			if (newProduct.getImgUrl() != null && imgFile != null && !imgFile.isEmpty()) {
+			if (productFound.getImgUrl() != null && imgFile != null && !imgFile.isEmpty()) {
 				replaceImg(productFound, imgFile);
 			}
-			if(newProduct.getImgUrl() == null && imgFile != null && !imgFile.isEmpty() && productFound.getImgUrl() != null) {
+			if(productFound.getImgUrl() == null && imgFile != null && !imgFile.isEmpty() && productFound.getImgUrl() != null) {
 				deleteImg(productFound);
 				String fileName = createProductImage(imgFile);
 				productFound.setImgUrl("/uploads/products/" + fileName);

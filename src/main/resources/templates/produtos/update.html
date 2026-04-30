@@ -17,7 +17,13 @@
         </div>
         <form th:action="'/produtos/update/' + ${p.idproduct}" method="POST" id="formProduto"
             enctype="multipart/form-data">
+            <img id="preview" th:src="${p.imgUrl}" alt="Imagem do Produto" class="rounded-circle mb-4"
+                style="max-width: 150px; max-height: 150px; object-fit: cover;">
             <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label small fw-bold">Imagem</label>
+                    <input class="form-control" type="file" name="imgFile" id="inputImagem" />
+                </div>
                 <div class="col-md-8">
                     <label class="form-label small fw-bold">Nome do Produto/Serviço</label>
                     <input th:value="${p.name}" type="text" class="form-control" name="name"
@@ -35,16 +41,13 @@
                 <div class="col-md-4">
                     <label class="form-label small fw-bold">Categoria</label>
                     <select name="category" class="form-select" required>
-                        <option th:each="c : ${categories}" th:value="${c}" th:text="${c}" th:selected="${p.category == c}"></option>
+                        <option th:each="c : ${categories}" th:value="${c}" th:text="${c}"
+                            th:selected="${p.category == c}"></option>
                     </select>
                 </div>
                 <div class="col-12">
-                    <label class="form-label small fw-bold">Imagem</label>
-                    <input class="form-control" type="file" name="imgFile" />
-                </div>
-                <div class="col-12">
                     <label class="form-label small fw-bold">Descrição</label>
-                    <textarea th:text="${p.name}" class="form-control" name="description" rows="3"
+                    <textarea th:text="${p.description}" class="form-control" name="description" rows="3"
                         placeholder="Detalhes técnicos ou especificações..."></textarea>
                 </div>
                 <div class="col-12 mt-4">
@@ -58,7 +61,7 @@
         </form>
 
     </div>
-
+    <script th:src="@{/js/updateProduto.js}"></script>
 </body>
 
 </html>
