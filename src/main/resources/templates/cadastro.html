@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Cadastrar Usuário</title>
@@ -10,85 +11,88 @@
 
 <body class="bg-light">
 
-<div class="container mt-5">
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Cadastro de Usuário</h5>
-        </div>
+    <div class="container mt-5">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Cadastro de Usuário</h5>
+            </div>
 
-        <div class="card-body">
-            <form action="/usuario/cadastro" method="post" enctype="multipart/form-data">
+            <div class="card-body">
+                <form action="/usuario/cadastro" method="post" enctype="multipart/form-data">
 
-                <div class="row g-3">
+                    <div class="row g-3">
 
-                    <!-- Nome -->
-                    <div class="col-md-6">
-                        <label class="form-label">Nome</label>
-                        <input type="text" name="name" class="form-control" required>
+                        <!-- Nome -->
+                        <div class="col-md-6">
+                            <label class="form-label">Nome</label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+
+                        <!-- Telefone -->
+                        <div class="col-md-6">
+                            <label class="form-label">Telefone</label>
+                            <input type="tel" class="form-control" name="phone" required>
+                        </div>
+
+                        <!-- CPF -->
+                        <div class="col-md-6">
+                            <label class="form-label">CPF</label>
+                            <input type="text" class="form-control" name="cpf" maxlength="11" required>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" required>
+                        </div>
+
+                        <!-- Senha -->
+                        <div class="col-md-6">
+                            <label class="form-label">Senha</label>
+                            <input type="password" class="form-control" name="password" required>
+                        </div>
+
+                        <!-- Role -->
+                        <div class="col-md-6">
+                            <label class="form-label">Perfil</label>
+                            <select class="form-select" name="role">
+                                <option value="">Selecione</option>
+                                <option th:each="r : ${roles}" th:value="${r}" th:text="${r}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="col-md-6">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" name="status">
+                                <option value="">Selecione</option>
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Img URL -->
+                        <div class="col-12">
+                            <label class="form-label">URL da Imagem</label>
+                            <input type="file" class="form-control" name="imgFile">
+                        </div>
+
+                        <!-- Botões -->
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                Salvar
+                            </button>
+                            <a href="/users" class="btn btn-secondary">Cancelar</a>
+                        </div>
+
                     </div>
 
-                    <!-- Telefone -->
-                    <div class="col-md-6">
-                        <label class="form-label">Telefone</label>
-                        <input type="tel" class="form-control" name="phone" required>
-                    </div>
-
-                    <!-- Email -->
-                    <div class="col-md-6">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email" required>
-                    </div>
-
-                    <!-- Senha -->
-                    <div class="col-md-6">
-                        <label class="form-label">Senha</label>
-                        <input type="password" class="form-control" name="password" required>
-                    </div>
-
-                    <!-- Role -->
-                    <div class="col-md-6">
-                        <label class="form-label">Perfil</label>
-                        <select class="form-select" name="role">
-                            <option value="">Selecione</option>
-                            <option th:each="r : ${roles}" 
-                                    th:value="${r}" 
-                                    th:text="${r}">
-                            </option>
-                        </select>
-                    </div>
-
-                    <!-- Status -->
-                    <div class="col-md-6">
-                        <label class="form-label">Status</label>
-                        <select class="form-select" name="status">
-                            <option value="">Selecione</option>
-                            <option th:each="s : ${statuses}" 
-                                    th:value="${s}" 
-                                    th:text="${s}">
-                            </option>
-                        </select>
-                    </div>
-
-                    <!-- Img URL -->
-                    <div class="col-12">
-                        <label class="form-label">URL da Imagem</label>
-                        <input type="file" class="form-control" name="imgFile">
-                    </div>
-
-                    <!-- Botões -->
-                    <div class="col-12 mt-4">
-                        <button type="submit" class="btn btn-primary">
-                            Salvar
-                        </button>
-                        <a href="/users" class="btn btn-secondary">Cancelar</a>
-                    </div>
-
-                </div>
-
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
 </body>
+
 </html>

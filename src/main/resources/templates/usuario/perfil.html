@@ -91,7 +91,7 @@
                         <!-- Avatar e Nome -->
                         <div class="text-center avatar-wrapper mb-4">
                             <img th:src="${user.imgUrl != null ? user.imgUrl : '/images/default-user.png'}"
-                                 class="rounded-circle avatar-img mb-3">
+                                 class="rounded-circle avatar-img mb-3 bg-light" alt="Avatar do Usuário">
                             
                             <h3 class="fw-bold text-dark mb-1" th:text="${user.name}">Nome do Usuário</h3>
                             <p class="text-muted" th:text="${user.email}">email@email.com</p>

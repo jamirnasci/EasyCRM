@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,6 +33,10 @@ public class UserService {
 		user.setImgUrl("/uploads/users/" + fileName);
 		user.setPassword(pe.encode(user.getPassword()));
 		return ur.save(user);
+	}
+
+	public List<User> findAll() {
+		return ur.findAll();
 	}
 
 	public User findById(Long id) {

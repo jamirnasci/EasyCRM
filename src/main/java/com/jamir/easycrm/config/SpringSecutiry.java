@@ -27,7 +27,7 @@ public class SpringSecutiry {
             )
             .formLogin(formLogin -> formLogin
                 .loginPage("/login")
-                .defaultSuccessUrl("/clientes", true)
+                .defaultSuccessUrl("/clientes", true)                
                 .loginProcessingUrl("/login")
                 .usernameParameter("email")
                 .permitAll()

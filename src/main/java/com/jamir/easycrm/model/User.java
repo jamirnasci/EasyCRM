@@ -19,6 +19,8 @@ public class User {
     private Long iduser;
     @Column(nullable = false)
     private String name;
+	@Column(nullable = false, unique = true, length = 11)
+	private String cpf;
     @Column(nullable = false, unique = true)
     private String phone;
     @Column(nullable = false, unique = true)
@@ -90,4 +92,11 @@ public class User {
 	public void setCreated_at(LocalDateTime created_at) {
 		this.created_at = created_at;
 	}
+	public String getCpf() {
+		return cpf;
+	}
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+	
 }
