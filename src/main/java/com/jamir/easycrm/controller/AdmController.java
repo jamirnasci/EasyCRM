@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.jamir.easycrm.config.UserPrincipal;
 import com.jamir.easycrm.model.User;
 import com.jamir.easycrm.model.UserRoles;
 import com.jamir.easycrm.model.UserStatus;
@@ -29,33 +31,49 @@ public class AdmController {
     private UserService us;
     @Autowired
     private AdmService as;
+
     @GetMapping("/home")
-    public ModelAndView admHome() {
+    public ModelAndView admHome(
+            @AuthenticationPrincipal UserPrincipal user) {
+        if (user.getUser().getRole() != UserRoles.ADM) {
+            return new ModelAndView("utils/unauthorized");
+        }
         List<User> users = us.findAll();
         ModelAndView mv = new ModelAndView("adm/home");
         mv.addObject("users", users);
         return mv;
     }
+
     @GetMapping("/usuario/update/{id}")
-    public ModelAndView updateUsuario(@PathVariable Long id) {
-        User user = us.findById(id);
+    public ModelAndView updateUsuario(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserPrincipal user) {
+        if (user.getUser().getRole() != UserRoles.ADM) {
+            return new ModelAndView("utils/unauthorized");
+        }
+        User userFound = us.findById(id);
         ModelAndView mv = new ModelAndView("adm/update-usuario");
-        mv.addObject("user", user);
+        mv.addObject("user", userFound);
         mv.addObject("roles", UserRoles.values());
         mv.addObject("statuses", UserStatus.values());
         return mv;
     }
-    	@PostMapping("/usuario/update/{id}")
-	public String editAccount(
-			@ModelAttribute User user,
-			@RequestParam("imgFile") MultipartFile imgFile,
-            @PathVariable Long id
-		) {
-		Optional<User> updatedUser = as.update(id, user, imgFile);
-		if(updatedUser.isPresent()) {
-			return "redirect:/adm/home";
-		} else {
-			return "redirect:/adm/home?error";
-		}
-	}
+
+    @PostMapping("/usuario/update/{id}")
+    public String editAccount(
+            @ModelAttribute User user,
+            @RequestParam("imgFile") MultipartFile imgFile,
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserPrincipal authUser
+    ) {
+        if(authUser.getUser().getRole() != UserRoles.ADM) {
+            return "utils/unauthorized";
+        }
+        Optional<User> updatedUser = as.update(id, user, imgFile);
+        if (updatedUser.isPresent()) {
+            return "redirect:/adm/home";
+        } else {
+            return "redirect:/adm/home?error";
+        }
+    }
 }

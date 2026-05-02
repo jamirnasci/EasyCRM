@@ -20,8 +20,8 @@ public class CustomerService {
         return cr.findAll();
     }
 	
-	public List<Customer> search(String key){
-        return cr.search(key);
+	public List<Customer> search(String key, Long userId){
+        return cr.search(key, userId);
     }
 	
     public List<Customer> findByUser(User user){

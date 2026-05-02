@@ -28,15 +28,18 @@ public class CustomerController {
 	private CustomerService cs;
 	
 	@GetMapping("/clientes")
-	public ModelAndView clientes(@RequestParam(name = "search", required = false) String search) {
+	public ModelAndView clientes(
+		@RequestParam(name = "search", required = false) String search,
+		@AuthenticationPrincipal UserPrincipal user
+	) {
 		if(search != null) {
-			List<Customer> loadedCustomers = cs.search(search);
+			List<Customer> loadedCustomers = cs.search(search, user.getUser().getIduser());
 			ModelAndView mv = new ModelAndView("clientes/page");
 			mv.addObject("statuses", CustomerStatus.values());
 			mv.addObject("customers", loadedCustomers);
 			return mv;
 		}
-		List<Customer> loadedCustomers = cs.findAll();
+		List<Customer> loadedCustomers = cs.findByUser(user.getUser());
 		ModelAndView mv = new ModelAndView("clientes/page");
 		mv.addObject("statuses", CustomerStatus.values());
 		mv.addObject("customers", loadedCustomers);
@@ -53,8 +56,14 @@ public class CustomerController {
 		});
 	}
 	@GetMapping("/clientes/update/{id}")
-	public ModelAndView update(@PathVariable(name = "id") Long id) {
+	public ModelAndView update(
+		@PathVariable(name = "id") Long id,
+		@AuthenticationPrincipal UserPrincipal user
+	) {
 		return cs.findById(id).map(customerFound ->{
+			if(!customerFound.getUser().getIduser().equals(user.getUser().getIduser())) {
+				return new ModelAndView("utils/unauthorized");
+			}
 			ModelAndView mv = new ModelAndView("clientes/update");
 			mv.addObject("customer", customerFound);
 			mv.addObject("statuses", CustomerStatus.values());

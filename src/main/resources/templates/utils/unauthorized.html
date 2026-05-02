@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso não autorizado</title>
+    <th:block th:replace="~{partials/headers :: headers}"></th:block>
+</head>
+<body class="bg-light">
+
+<div class="container d-flex vh-100 align-items-center justify-content-center">
+    <div class="text-center">
+        
+        <div class="mb-4">
+            <i class="fa-solid fa-lock text-danger" style="font-size: 80px;"></i>
+        </div>
+
+        <h1 class="display-4 fw-bold text-danger">403</h1>
+        <h3 class="mb-3">Acesso não autorizado</h3>
+
+        <p class="text-muted mb-4">
+            Você não tem permissão para acessar esta página.<br>
+            Caso ache que isso é um erro, entre em contato com o administrador.
+        </p>
+
+        <div class="d-flex justify-content-center gap-3">
+            <a href="/" class="btn btn-primary">
+                <i class="fa-solid fa-house"></i> Voltar para Home
+            </a>
+
+            <a href="/login" class="btn btn-outline-secondary">
+                <i class="fa-solid fa-right-to-bracket"></i> Fazer login
+            </a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

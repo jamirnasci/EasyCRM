@@ -12,6 +12,6 @@ import com.jamir.easycrm.model.User;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long>{
 	public List<Customer> findByUser(User user);
-	@Query(value = "SELECT * FROM customer WHERE LOWER(name) LIKE %:key% OR LOWER(cpf) LIKE %:key%", nativeQuery = true)
-	public List<Customer> search(String key);
+	@Query(value = "SELECT * FROM customer WHERE (LOWER(name) LIKE %:key% OR LOWER(cpf) LIKE %:key%) AND user_id = :userId", nativeQuery = true)
+	public List<Customer> search(String key, Long userId);
 }

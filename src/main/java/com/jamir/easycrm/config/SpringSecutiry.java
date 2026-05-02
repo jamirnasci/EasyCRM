@@ -17,7 +17,7 @@ public class SpringSecutiry {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(request -> request
-            	.requestMatchers("/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
+            	.requestMatchers("/css/**", "/js/**", "/img/**", "/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/").permitAll()
                 .requestMatchers(HttpMethod.GET, "/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/usuario/cadastro").permitAll()

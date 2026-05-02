@@ -37,11 +37,13 @@ public class SaleController {
 	@GetMapping("/vendas")
 	public ModelAndView vendas(
 			@RequestParam(name = "d1", required = false) LocalDate d1,
-			@RequestParam(name = "d2", required = false) LocalDate d2) {
+			@RequestParam(name = "d2", required = false) LocalDate d2,
+			@AuthenticationPrincipal UserPrincipal user
+		) {
 		ModelAndView mv = new ModelAndView("vendas/page");
 		BigDecimal total = BigDecimal.ZERO;
 		if (d1 != null && d2 != null) {
-			List<Sale> salesPerDate = ss.findBeetweenDates(d1, d2);
+			List<Sale> salesPerDate = ss.findBeetweenDates(d1, d2, user.getUser());
 			total = ss.sumTotalSales(salesPerDate);
 			mv.addObject("sales", salesPerDate);
 			mv.addObject("total", total);
@@ -51,12 +53,12 @@ public class SaleController {
 			mv.addObject("d1", d1);
 			mv.addObject("d2", d2);
 		} else {
-			mv.addObject("sales", ss.findAll());
+			mv.addObject("sales", ss.findByUser(user.getUser()));
 		}
-		List<Sale> sales = ss.findAll();
+		List<Sale> sales = ss.findByUser(user.getUser());
 		mv.addObject("total", ss.sumTotalSales(sales));
 		mv.addObject("quantity", sales.size());
-		mv.addObject("customers", cs.findAll());
+		mv.addObject("customers", cs.findByUser(user.getUser()));
 		mv.addObject("products", ps.findAll());
 		mv.addObject("negociacaoCount", ss.sumByStatus(sales, SaleStatus.EM_NEGOCIACAO));
 		mv.addObject("finalizadaCount", ss.sumByStatus(sales, SaleStatus.FINALIZADA));
@@ -78,8 +80,14 @@ public class SaleController {
 	}
 
 	@GetMapping("/vendas/update/{id}")
-	public ModelAndView update(@PathVariable(name = "id") Long id) {
+	public ModelAndView update(
+		@PathVariable(name = "id") Long id,
+		@AuthenticationPrincipal UserPrincipal user
+	) {
 		return ss.findById(id).map(saleFound -> {
+			if(!saleFound.getCustomer().getUser().getIduser().equals(user.getUser().getIduser())) {
+				return new ModelAndView("utils/unauthorized");
+			}
 			ModelAndView mv = new ModelAndView("vendas/update");
 			mv.addObject("sale", saleFound);
 			mv.addObject("customers", cs.findAll());

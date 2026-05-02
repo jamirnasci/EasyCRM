@@ -35,19 +35,21 @@ public class InteractionController {
 	public ModelAndView interactions(
 			@RequestParam(name = "d1", required = false) LocalDate d1,
 			@RequestParam(name = "d2", required = false) LocalDate d2,
-			@RequestParam(name = "status", required = false) String status) {
+			@RequestParam(name = "status", required = false) String status,
+			@AuthenticationPrincipal UserPrincipal user
+		) {
 		ModelAndView mv = new ModelAndView("interacoes/page");
 		if (status != null && status.isBlank()) {
 			status = null;
 		}
 		if (d1 != null && d2 != null) {
-			mv.addObject("interactions", is.findBetweenDatesAndStatus(d1, d2, status));
+			mv.addObject("interactions", is.findBetweenDatesAndStatus(d1, d2, status, user.getUser().getIduser()));
 		} else {
-			mv.addObject("interactions", is.findAll());
+			mv.addObject("interactions", is.findByUser(user.getUser()));
 		}
 		mv.addObject("types", InteractionType.values());
 		mv.addObject("statuses", InteractionStatus.values());
-		mv.addObject("customers", cs.findAll());
+		mv.addObject("customers", cs.findByUser(user.getUser()));
 		return mv;
 	}
 
@@ -64,8 +66,14 @@ public class InteractionController {
 	}
 
 	@GetMapping("/interacoes/update/{id}")
-	public ModelAndView update(@PathVariable(name = "id") Long id) {
+	public ModelAndView update(
+		@PathVariable(name = "id") Long id,
+		@AuthenticationPrincipal UserPrincipal user
+	) {
 		return is.findById(id).map(interactionFound -> {
+			if(!interactionFound.getCustomer().getUser().getIduser().equals(user.getUser().getIduser())) {
+				return new ModelAndView("utils/unauthorized");
+			}
 			ModelAndView mv = new ModelAndView("interacoes/update");
 			mv.addObject("interaction", interactionFound);
 			mv.addObject("types", InteractionType.values());

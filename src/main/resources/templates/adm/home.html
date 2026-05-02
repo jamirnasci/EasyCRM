@@ -61,7 +61,9 @@
                                 <td th:text="${user.email}"></td>
                                 <td th:text="${user.phone}"></td>
                                 <td>
-                                <span th:text="${user.status}" th:class="'badge rounded-pill ' + (${user.status.name()} == 'ATIVO' ? 'bg-success' : 'bg-danger')"> </span>
+                                    <span th:text="${user.status}"
+                                        th:class="'badge rounded-pill ' + (${user.status.name()} == 'ATIVO' ? 'bg-success' : 'bg-danger')">
+                                    </span>
                                 </td>
                                 <td class="text-end pe-4">
                                     <a class="btn btn-sm btn-light text-primary"
@@ -85,51 +87,80 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content border-0 shadow">
                 <div class="modal-header border-bottom-0 pt-4 px-4">
-                    <h5 class="modal-title fw-bold" id="modalLabel">Cadastrar Novo Cliente</h5>
+                    <h5 class="modal-title fw-bold" id="modalLabel">Cadastrar Novo Usuário</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
-                    <form action="/clientes/create" method="post" id="formCliente">
+                    <form action="/usuario/cadastro" method="post" enctype="multipart/form-data">
+
                         <div class="row g-3">
+
+                            <!-- Nome -->
                             <div class="col-md-6">
-                                <label class="form-label small fw-bold">Nome Completo</label>
-                                <input type="text" class="form-control" name="name" placeholder="Ex: Maria Oliveira"
-                                    required>
+                                <label class="form-label">Nome</label>
+                                <input type="text" name="name" class="form-control" required>
                             </div>
+
+                            <!-- Telefone -->
                             <div class="col-md-6">
-                                <label class="form-label small fw-bold">E-mail</label>
-                                <input type="email" class="form-control" name="email" placeholder="maria@email.com"
-                                    required>
+                                <label class="form-label">Telefone</label>
+                                <input type="tel" class="form-control" name="phone" required>
                             </div>
+
+                            <!-- CPF -->
                             <div class="col-md-6">
-                                <label class="form-label small fw-bold">Telefone/WhatsApp</label>
-                                <input type="tel" class="form-control" name="phone" placeholder="(00) 00000-0000">
+                                <label class="form-label">CPF</label>
+                                <input type="text" class="form-control" name="cpf" maxlength="11" required>
                             </div>
+
+                            <!-- Email -->
                             <div class="col-md-6">
-                                <label class="form-label small fw-bold">CPF/CNPJ</label>
-                                <input type="text" class="form-control" name="cpf" placeholder="000.000.000-00"
-                                    maxLength="11">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" name="email" required>
                             </div>
+
+                            <!-- Senha -->
                             <div class="col-md-6">
-                                <label class="form-label small fw-bold">Status</label>
-                                <select class="form-select" name="status">
-                                    <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+                                <label class="form-label">Senha</label>
+                                <input type="password" class="form-control" name="password" required>
+                            </div>
+
+                            <!-- Role -->
+                            <div class="col-md-6">
+                                <label class="form-label">Perfil</label>
+                                <select class="form-select" name="role">
+                                    <option value="">Selecione</option>
+                                    <option th:each="r : ${roles}" th:value="${r}" th:text="${r}">
+                                    </option>
                                 </select>
                             </div>
+
+                            <!-- Status -->
+                            <div class="col-md-6">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" name="status">
+                                    <option value="">Selecione</option>
+                                    <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- Img URL -->
                             <div class="col-12">
-                                <label class="form-label small fw-bold">Descrição</label>
-                                <textarea rows="5" class="form-control" name="description"
-                                    placeholder="Rua, Número, Bairro..."></textarea>
+                                <label class="form-label">URL da Imagem</label>
+                                <input type="file" class="form-control" name="imgFile">
                             </div>
+
+                            <!-- Botões -->
                             <div class="col-12 mt-4">
-                                <hr>
-                                <div class="d-flex justify-content-end gap-2">
-                                    <button type="button" class="btn btn-light"
-                                        data-bs-dismiss="modal">Cancelar</button>
-                                    <button type="submit" class="btn btn-primary px-4">Salvar Cliente</button>
-                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    Salvar
+                                </button>
+                                <a href="/users" class="btn btn-secondary">Cancelar</a>
                             </div>
+
                         </div>
+
                     </form>
                 </div>
             </div>

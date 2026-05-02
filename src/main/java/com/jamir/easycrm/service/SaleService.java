@@ -1,6 +1,7 @@
 package com.jamir.easycrm.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.jamir.easycrm.model.Product;
 import com.jamir.easycrm.model.Sale;
 import com.jamir.easycrm.model.SaleStatus;
+import com.jamir.easycrm.model.User;
 import com.jamir.easycrm.repository.SaleRepository;
 
 import jakarta.transaction.Transactional;
@@ -21,8 +23,8 @@ public class SaleService {
     @Autowired
     private ProductService ps;
 
-    public List<Sale> findAll() {
-        return sr.findAll();
+    public List<Sale> findByUser(User user){
+        return sr.findByUser(user);
     }
 
     public BigDecimal sumTotalSales(List<Sale> sales) {
@@ -59,8 +61,8 @@ public class SaleService {
         return sr.findById(id);
     }
 
-    public List<Sale> findBeetweenDates(java.time.LocalDate d1, java.time.LocalDate d2) {
-        return sr.findBetweenDates(d1, d2);
+    public List<Sale> findBeetweenDates(LocalDate d1, LocalDate d2, User user) {
+        return sr.findBetweenDates(d1, d2, user);
     }
 
     @Transactional

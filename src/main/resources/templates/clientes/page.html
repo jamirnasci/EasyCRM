@@ -53,6 +53,9 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <tr class="text-secondary" th:if="${customers.empty}">
+                                <td colspan="5" class="text-center">Nenhum cliente encontrado.</td>
+                            </tr>
                             <tr th:each="c : ${customers}">
                                 <td class="ps-4">
                                     <div class="fw-bold" th:text="${c.name}"></div>
