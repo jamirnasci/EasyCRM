@@ -64,15 +64,14 @@
                                 <td th:text="${c.email}"></td>
                                 <td th:text="${c.phone}"></td>
                                 <td>
-                                <span class="badge rounded-pill"
-                                    th:classappend="${
+                                    <span class="badge rounded-pill" th:classappend="${
                                         c.status?.name() == 'LEAD' ? 'bg-info' :
                                         c.status?.name() == 'CONTATADO' ? 'bg-warning text-dark' :
                                         c.status?.name() == 'CONVERTIDO' ? 'bg-success' :
                                         c.status?.name() == 'QUALIFICADO' ? 'bg-primary' : 'bg-danger'}"
-                                    th:text="${c.status}">
-                                    Status
-                                </span>
+                                        th:text="${c.status}">
+                                        Status
+                                    </span>
                                 </td>
                                 <td class="text-end pe-4">
                                     <a class="btn btn-sm btn-light text-primary"
@@ -146,7 +145,9 @@
             </div>
         </div>
     </div>
+    <div id="msg" th:if="${error}" th:data-msg="${error}"></div>
+    <script th:src="@{/js/msgHandler.js}"></script>
+    <script th:src="@{/js/clientes.js}"></script>
 </body>
-<script th:src="@{/js/clientes.js}"></script>
 
 </html>

@@ -8,12 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jamir.easycrm.config.UserPrincipal;
 import com.jamir.easycrm.model.Customer;
@@ -23,6 +26,8 @@ import com.jamir.easycrm.model.SaleStatus;
 import com.jamir.easycrm.service.CustomerService;
 import com.jamir.easycrm.service.ProductService;
 import com.jamir.easycrm.service.SaleService;
+
+import jakarta.validation.Valid;
 
 @Controller
 public class SaleController {
@@ -68,15 +73,14 @@ public class SaleController {
 	}
 
 	@PostMapping("/vendas/create")
-	public String novaVenda(Sale sale, @AuthenticationPrincipal UserPrincipal user) {
+	public String novaVenda(@Valid Sale sale, BindingResult result, @AuthenticationPrincipal UserPrincipal user, RedirectAttributes redirectAttributes) {
+		if(result.hasErrors()) {
+			redirectAttributes.addFlashAttribute("error", "Erro ao validar os dados venda. Verifique os dados e tente novamente.");
+			return "redirect:/vendas";
+		}
 		sale.setUser(user.getUser());
-		return ss.create(sale).map(savedSale -> {
-			String msg = "Venda cadastrada com sucesso";
-			return "redirect:/vendas?msg=" + msg;
-		}).orElseGet(() -> {
-			String msg = "Falha ao cadastrar venda";
-			return "redirect:/vendas?msg=" + msg;
-		});
+		ss.create(sale);
+		return "redirect:/vendas";
 	}
 
 	@GetMapping("/vendas/update/{id}")
@@ -90,7 +94,7 @@ public class SaleController {
 			}
 			ModelAndView mv = new ModelAndView("vendas/update");
 			mv.addObject("sale", saleFound);
-			mv.addObject("customers", cs.findAll());
+			mv.addObject("customers", cs.findByUser(user.getUser()));
 			mv.addObject("products", ps.findAll());
 			mv.addObject("paymentMethods", PaymentMethod.values());
 			mv.addObject("saleStatus", SaleStatus.values());
@@ -101,12 +105,18 @@ public class SaleController {
 	}
 
 	@PostMapping("/vendas/update/{id}")
-	public String update(@PathVariable(name = "id") Long id, Sale s) {
-		return ss.update(id, s).map(updatedSale -> {
-			return "redirect:/vendas";
-		}).orElseGet(() -> {
-			String msg = "Falha ao atualizar venda";
-			return "redirect:/vendas?msg=" + msg;
-		});
+	public String update(
+		@PathVariable(name = "id") Long id, 
+		@ModelAttribute @Valid Sale s,
+		BindingResult result,
+		@AuthenticationPrincipal UserPrincipal user,
+		RedirectAttributes redirectAttributes) {
+		if(result.hasErrors()) {
+			redirectAttributes.addFlashAttribute("error", "Erro ao validar os dados da venda. Verifique os dados e tente novamente.");
+			return "redirect:/vendas/update/" + id;
+		}
+		s.setUser(user.getUser());
+		ss.update(id, s);
+		return "redirect:/vendas";
 	}
 }

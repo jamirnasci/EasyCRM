@@ -11,30 +11,44 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long iduser;
+
+	@NotBlank(message = "Nome é obrigatório")
     @Column(nullable = false)
     private String name;
+
+	@NotBlank(message = "CPF é obrigatório")
 	@Column(nullable = false, unique = true, length = 11)
 	private String cpf;
+
+	@NotBlank(message = "Telefone é obrigatório")
     @Column(nullable = false, unique = true)
     private String phone;
+
+	@NotBlank(message = "Email é obrigatório")
     @Column(nullable = false, unique = true)
     private String email;
+
     @Column(nullable = false)
     private String password;
+	
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRoles role;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserStatus status;
+
     @Column()
     private String imgUrl;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime created_at = LocalDateTime.now();
@@ -97,6 +111,12 @@ public class User {
 	}
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
+	}
+	@Override
+	public String toString() {
+		return "User [iduser=" + iduser + ", name=" + name + ", cpf=" + cpf + ", phone=" + phone + ", email=" + email
+				+ ", password=" + password + ", role=" + role + ", status=" + status + ", imgUrl=" + imgUrl
+				+ ", created_at=" + created_at + "]";
 	}
 	
 }

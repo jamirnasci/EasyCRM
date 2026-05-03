@@ -38,7 +38,7 @@
 					<div class="col-md-6">
 					    <label class="form-label small fw-bold">Status</label>
 					    <select class="form-select" name="status">
-							<option th:each="s : ${statuses}" th:select="${customer.status == s}" th:value="${s}" th:text="${s}"></option>
+							<option th:each="s : ${statuses}" th:selected="${customer.status == s}" th:value="${s}" th:text="${s}"></option>
 						</select>
 					</div>
 		            <div class="col-12">
@@ -56,6 +56,8 @@
 		    </form>
 		</div>
     </div>
+	<div id="msg" th:if="${error}" th:data-msg="${error}"></div>
+    <script th:src="@{/js/msgHandler.js}"></script>
 </body>
 
 </html>

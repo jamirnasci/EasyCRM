@@ -11,9 +11,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.jamir.easycrm.exception.ProductException;
 import com.jamir.easycrm.model.Product;
 import com.jamir.easycrm.model.ProductCategory;
 import com.jamir.easycrm.repository.ProductRepository;
@@ -121,29 +124,49 @@ public class ProductService {
 	}
 
 	public Product create(Product p, MultipartFile imgFile) {
-		String fileName = createProductImage(imgFile);
-		p.setImgUrl("/uploads/products/" + fileName);
-		return pr.save(p);
-
+		if (imgFile != null && !imgFile.isEmpty()) {
+			String fileName = createProductImage(imgFile);
+			p.setImgUrl("/uploads/products/" + fileName);
+		}
+		try {
+			return pr.save(p);
+		} catch (Exception e) {
+			throw new ProductException("Falha ao cadastrar produto, verifique os dados e tente novamente");
+		}
 	}
 
-	public Optional<Product> update(Long idproduct, Product newProduct, MultipartFile imgFile) {
-		return pr.findById(idproduct).map(productFound -> {
-			if (productFound.getImgUrl() != null && imgFile != null && !imgFile.isEmpty()) {
-				replaceImg(productFound, imgFile);
-			}
-			if(productFound.getImgUrl() == null && imgFile != null && !imgFile.isEmpty() && productFound.getImgUrl() != null) {
-				deleteImg(productFound);
+	public Product update(Long idproduct, Product newProduct, MultipartFile imgFile) {
+
+		Product productFound = pr.findById(idproduct)
+				.orElseThrow(() -> new ProductException("Produto não encontrado"));
+
+		try {
+
+			if (imgFile != null && !imgFile.isEmpty()) {
+
+				// Se já tinha imagem → remove antiga
+				if (productFound.getImgUrl() != null) {
+					deleteImg(productFound);
+				}
+
 				String fileName = createProductImage(imgFile);
 				productFound.setImgUrl("/uploads/products/" + fileName);
 			}
+
 			productFound.setName(newProduct.getName());
 			productFound.setDescription(newProduct.getDescription());
 			productFound.setPrice(newProduct.getPrice());
 			productFound.setCategory(newProduct.getCategory());
 			productFound.setQuantity(newProduct.getQuantity());
+
 			return pr.save(productFound);
-		});
+		} catch (DataIntegrityViolationException e) {
+			e.printStackTrace();
+			throw new ProductException("Falha ao atualizar produto, verifique os dados e tente novamente");
+		} catch (TransactionSystemException e) {
+			e.printStackTrace();
+			throw new ProductException("Falha ao atualizar produto, verifique os dados e tente novamente");
+		}
 	}
 
 	public Optional<Product> delete(Long idcustomer) {

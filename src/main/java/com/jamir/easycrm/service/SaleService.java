@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.jamir.easycrm.exception.ProductException;
 import com.jamir.easycrm.model.Product;
 import com.jamir.easycrm.model.Sale;
 import com.jamir.easycrm.model.SaleStatus;
@@ -23,7 +25,7 @@ public class SaleService {
     @Autowired
     private ProductService ps;
 
-    public List<Sale> findByUser(User user){
+    public List<Sale> findByUser(User user) {
         return sr.findByUser(user);
     }
 
@@ -45,16 +47,23 @@ public class SaleService {
         return total;
     }
 
-    public Optional<Sale> create(Sale s) {
-        if (s.getProduct() == null) {
-            return Optional.empty();
+    @Transactional
+    public Sale create(Sale s) {
+
+        Product selectedProduct = ps.findById(s.getProduct().getIdproduct())
+                .orElseThrow(() -> new ProductException("Produto não encontrado"));
+
+        if (s.getQuantity() <= 0) {
+            throw new ProductException("Quantidade inválida");
         }
-        Product selectedProduct = ps.findById(s.getProduct().getIdproduct()).orElse(null);
-        if (selectedProduct != null && s.getQuantity() < selectedProduct.getQuantity()) {
-            ps.decrementQuantity(selectedProduct, s.getQuantity());
-            return Optional.of(sr.save(s));
+
+        if (s.getQuantity() > selectedProduct.getQuantity()) {
+            throw new ProductException("Quantidade insuficiente em estoque");
         }
-        return Optional.empty();
+
+        ps.decrementQuantity(selectedProduct, s.getQuantity());
+
+        return sr.save(s);
     }
 
     public Optional<Sale> findById(Long id) {
@@ -66,22 +75,52 @@ public class SaleService {
     }
 
     @Transactional
-    public Optional<Sale> update(Long idsale, Sale s) {
-        return sr.findById(idsale).map(saleFound -> {
+    public Sale update(Long idsale, Sale s) {
 
-            ps.incrementQuantity(saleFound.getProduct(), saleFound.getQuantity());
-            Optional<Product> newProduct = ps.decrementQuantity(s.getProduct(), s.getQuantity());
-            if(newProduct.isEmpty()) {
-                throw new RuntimeException("Não foi possível atualizar a venda devido à quantidade insuficiente do produto.");
+        if(!s.getUser().getIduser().equals(s.getCustomer().getUser().getIduser())) {
+            throw new ProductException("O cliente selecionado não pertence ao usuário logado.");
+        }
+
+        Sale saleFound = sr.findById(idsale)
+                .orElseThrow(() -> new ProductException("Venda não encontrada"));
+
+        Product oldProduct = saleFound.getProduct();
+        Product newProduct = ps.findById(s.getProduct().getIdproduct())
+                .orElseThrow(() -> new ProductException("Produto não encontrado"));
+
+        int oldQty = saleFound.getQuantity();
+        int newQty = s.getQuantity();
+
+        if (oldProduct.getIdproduct().equals(newProduct.getIdproduct())) {
+
+            int diff = newQty - oldQty;
+
+            if (diff > 0) {
+                if (diff > newProduct.getQuantity()) {
+                    throw new ProductException("Estoque insuficiente para essa operação");
+                }
+                ps.decrementQuantity(newProduct, diff);
+            } else if (diff < 0) {
+                ps.incrementQuantity(newProduct, -diff);
             }
-            saleFound.setCustomer(s.getCustomer());
-            saleFound.setPaymentMethod(s.getPaymentMethod());
-            saleFound.setProduct(newProduct.get());
-            saleFound.setQuantity(s.getQuantity());
-            saleFound.setStatus(s.getStatus());
-            saleFound.setTotal(s.getTotal());
 
-            return sr.save(saleFound);
-        });
+        } else {
+            ps.incrementQuantity(oldProduct, oldQty);
+
+            if (newQty > newProduct.getQuantity()) {
+                throw new ProductException("Estoque insuficiente para essa operação");
+            }
+
+            ps.decrementQuantity(newProduct, newQty);
+        }
+
+        saleFound.setCustomer(s.getCustomer());
+        saleFound.setPaymentMethod(s.getPaymentMethod());
+        saleFound.setProduct(newProduct);
+        saleFound.setQuantity(newQty);
+        saleFound.setStatus(s.getStatus());
+        saleFound.setTotal(s.getTotal());
+
+        return sr.save(saleFound);
     }
 }

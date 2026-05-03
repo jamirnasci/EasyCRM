@@ -24,21 +24,21 @@ public class Product {
     @NotBlank
     @Column(nullable = false)
     private String name;    
-    @NotNull
+    @NotNull(message = "Preço é obrigatório")
     @Positive
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-	@NotNull
+	@NotNull(message = "Categoria é obrigatória")
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private ProductCategory category;
 
-    @Column(nullable = false)
+    @Column()
     private String description;
     @Column()
     private String imgUrl;
-    @NotNull
+    @NotNull(message = "Quantidade é obrigatória")
     @Positive
     @Column(nullable = false)
     private int quantity;

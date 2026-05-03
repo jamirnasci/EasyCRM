@@ -35,11 +35,11 @@
         }
 
         .avatar-img {
-            width: 150px; 
-            height: 150px; 
+            width: 150px;
+            height: 150px;
             object-fit: cover;
             border: 5px solid #fff;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
         .info-label {
@@ -78,7 +78,7 @@
 
 <body>
     <div th:replace="~{partials/sideBar :: sideBar}"></div>
-    
+
     <div class="container-fluid pt-5">
         <div class="row justify-content-center">
             <div class="">
@@ -91,8 +91,8 @@
                         <!-- Avatar e Nome -->
                         <div class="text-center avatar-wrapper mb-4">
                             <img th:src="${user.imgUrl != null ? user.imgUrl : '/images/default-user.png'}"
-                                 class="rounded-circle avatar-img mb-3 bg-light" alt="Avatar do Usuário">
-                            
+                                class="rounded-circle avatar-img mb-3 bg-light" alt="Avatar do Usuário">
+
                             <h3 class="fw-bold text-dark mb-1" th:text="${user.name}">Nome do Usuário</h3>
                             <p class="text-muted" th:text="${user.email}">email@email.com</p>
                         </div>
@@ -106,8 +106,8 @@
                                 </div>
                                 <div class="mb-4">
                                     <p class="info-label text-start">Nível de Acesso</p>
-                                    <span class="badge badge-modern bg-soft-primary text-primary border border-primary" 
-                                          style="--bs-bg-opacity: .1;" th:text="${user.role}">ROLE</span>
+                                    <span class="badge badge-modern bg-soft-primary text-primary border border-primary"
+                                        style="--bs-bg-opacity: .1;" th:text="${user.role}">ROLE</span>
                                 </div>
                             </div>
 
@@ -116,13 +116,15 @@
                                 <div class="mb-4">
                                     <p class="info-label text-start">Status da Conta</p>
                                     <div>
-                                        <span th:class="'badge badge-modern ' + (${user.status.name() == 'ATIVO'} ? 'bg-success' : 'bg-secondary')"
-                                              th:text="${user.status}">Status</span>
+                                        <span
+                                            th:class="'badge badge-modern ' + (${user.status.name() == 'ATIVO'} ? 'bg-success' : 'bg-secondary')"
+                                            th:text="${user.status}">Status</span>
                                     </div>
                                 </div>
                                 <div class="mb-4">
                                     <p class="info-label text-start">Membro desde</p>
-                                    <p class="info-value text-start" th:text="${#temporals.format(user.created_at, 'dd MMM, yyyy')}">
+                                    <p class="info-value text-start"
+                                        th:text="${#temporals.format(user.created_at, 'dd MMM, yyyy')}">
                                         01 Jan, 2025
                                     </p>
                                 </div>
@@ -143,5 +145,8 @@
             </div>
         </div>
     </div>
+    <div id="msg" th:if="${error}" th:data-msg="${error}"></div>
+    <script th:src="@{/js/msgHandler.js}"></script>
 </body>
+
 </html>

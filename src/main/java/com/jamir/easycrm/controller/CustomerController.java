@@ -9,17 +9,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jamir.easycrm.config.UserPrincipal;
 import com.jamir.easycrm.model.Customer;
 import com.jamir.easycrm.model.CustomerStatus;
 import com.jamir.easycrm.service.CustomerService;
+
+import jakarta.validation.Valid;
 
 @Controller
 public class CustomerController {
@@ -46,14 +50,14 @@ public class CustomerController {
 		return mv;
 	}
 	@PostMapping("/clientes/create")
-	public String create(Customer c, @AuthenticationPrincipal UserPrincipal user) {
-		c.setUser(user.getUser());
-		return cs.create(c).map(savedCustomer ->{
+	public String create(@Valid Customer c, BindingResult result, @AuthenticationPrincipal UserPrincipal user, RedirectAttributes redirectAttributes) {
+		if(result.hasErrors()) {
+			redirectAttributes.addFlashAttribute("error", "Falha ao validar os dados do cliente. Verifique os dados e tente novamente.");
 			return "redirect:/clientes";
-		}).orElseGet(()->{
-			String msg = "Falha ao cadastrar cliente";
-			return "redirect:/clientes?msg=" + msg;
-		});
+		}
+		c.setUser(user.getUser());
+		cs.create(c);
+		return "redirect:/clientes";
 	}
 	@GetMapping("/clientes/update/{id}")
 	public ModelAndView update(
@@ -73,13 +77,13 @@ public class CustomerController {
 		});		
 	}
 	@PostMapping("/clientes/update/{id}")
-	public String update(@PathVariable(name = "id") Long id, Customer c) {
-		return cs.update(id, c).map(updatedCustomer ->{
-			return "redirect:/clientes";
-		}).orElseGet(()->{
-			String msg = "Falha ao atualizar cliente";
-			return "redirect:/clientes?msg=" + msg;
-		});		
+	public String update(@PathVariable(name = "id") Long id, @Valid Customer c, BindingResult result, RedirectAttributes redirectAttributes) {
+		if(result.hasErrors()) {
+			redirectAttributes.addFlashAttribute("error", "Falha ao validar os dados do cliente. Verifique os dados e tente novamente.");
+			return "redirect:/clientes/update/" + id;
+		}
+		cs.update(id, c);
+		return "redirect:/clientes";
 	}
 	@DeleteMapping("/clientes/delete/{id}")
 	public ResponseEntity<Map<String, String>> delete(@PathVariable(name = "id") Long id) {

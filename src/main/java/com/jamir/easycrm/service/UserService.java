@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.jamir.easycrm.exception.UserException;
 import com.jamir.easycrm.model.Product;
 import com.jamir.easycrm.model.User;
 import com.jamir.easycrm.repository.UserRepository;
@@ -40,7 +41,7 @@ public class UserService {
 	}
 
 	public User findById(Long id) {
-		return ur.findById(id).orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
+		return ur.findById(id).orElseThrow(() -> new UserException("Usuario não encontrado"));
 	}	
 
 	public void deleteImg(User u) {
@@ -53,14 +54,14 @@ public class UserService {
 
 		if (imgFile.exists()) {
 			if (!imgFile.delete()) {
-				throw new RuntimeException("Falha ao remover imagem do usuario");
+				throw new UserException("Falha ao remover imagem do usuario");
 			}
 		}
 	}
 
 	public String createUserImage(MultipartFile imgFile) {
 		if (imgFile != null && imgFile.isEmpty()) {
-			throw new RuntimeException("Arquivo foto de perfil inválido");
+			throw new UserException("Arquivo foto de perfil inválido");
 		}
 		String originalName = imgFile.getOriginalFilename();
 		String extension = originalName.substring(originalName.lastIndexOf("."));
@@ -99,14 +100,14 @@ public class UserService {
 				e.printStackTrace();
 			}
 		} else {
-			throw new RuntimeException("Falha ao substituir imagem do usuario: arquivo antigo não encontrado");
+			throw new UserException("Falha ao substituir imagem do usuario: arquivo antigo não encontrado");
 		}
 	}
 
 	public Optional<User> update(Long iduser, User user, MultipartFile imgFile, String newPassword) {
 		return ur.findById(iduser).map(userFound -> {
 			if(pe.matches(user.getPassword(), userFound.getPassword()) == false) {
-				throw new RuntimeException("Senha atual incorreta");
+				throw new UserException("Senha atual incorreta");
 			}
 			if (userFound.getImgUrl() != null && imgFile != null && !imgFile.isEmpty()) {
 				replaceImg(userFound, imgFile);
@@ -119,7 +120,6 @@ public class UserService {
 			userFound.setName(user.getName());
 			userFound.setPhone(user.getPhone());
 			userFound.setEmail(user.getEmail());
-			userFound.setStatus(user.getStatus());
 			if(newPassword != null && !newPassword.isEmpty()) {
 				userFound.setPassword(pe.encode(newPassword));
 			}

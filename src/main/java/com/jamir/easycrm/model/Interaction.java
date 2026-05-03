@@ -15,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Interaction {
@@ -22,12 +23,15 @@ public class Interaction {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idinteraction;
 
+	@NotNull
 	@Column(nullable = false)
 	private LocalDate date;
 
+	@NotNull(message = "Hora é obrigatória")
 	@Column(nullable = false)
 	private LocalTime time;
 
+	@NotNull(message = "Tipo de interação é obrigatório")
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private InteractionType type;
@@ -39,10 +43,12 @@ public class Interaction {
 	@Column()
 	private String description;
 
+	@NotNull(message = "Cliente é obrigatório")
 	@ManyToOne()
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 
+	@NotNull(message = "Usuário é obrigatório")
 	@ManyToOne()
 	@JoinColumn(name = "user_id")
 	private User user;

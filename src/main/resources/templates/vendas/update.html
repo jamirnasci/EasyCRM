@@ -21,7 +21,8 @@
                     <label class="form-label small fw-bold">Selecionar Cliente</label>
                     <select class="form-select" name="customer" required>
                         <option selected disabled>Escolha um cliente...</option>
-                        <option th:each="c: ${customers}" th:selected="${sale.customer.idcustomer == c.idcustomer}" th:text="${c.name}" th:value="${c.idcustomer}"></option>
+                        <option th:each="c: ${customers}" th:selected="${sale.customer.idcustomer == c.idcustomer}"
+                            th:text="${c.name}" th:value="${c.idcustomer}"></option>
                     </select>
                 </div>
                 <div class="col-12">
@@ -29,30 +30,35 @@
                     <div class="input-group">
                         <select class="form-select" id="productsSelect" name="product">
                             <option selected disabled>Selecione o produto...</option>
-                            <option th:each="p : ${products}" th:selected="${p.idproduct == sale.product.idproduct}" th:text="${p.name}" th:value="${p.idproduct}"></option>
+                            <option th:each="p : ${products}" th:selected="${p.idproduct == sale.product.idproduct}"
+                                th:text="${p.name}" th:value="${p.idproduct}"></option>
                         </select>
-                        <input th:value="${sale.quantity}" type="number" class="form-control w-25" placeholder="Qtd" value="1" min="1" id="quantity"
-                            name="quantity">
+                        <input th:value="${sale.quantity}" type="number" class="form-control w-25" placeholder="Qtd"
+                            value="1" min="1" id="quantity" name="quantity">
                         <button class="btn btn-outline-primary" type="button" id="calcBtn">Calcular</button>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label small fw-bold">Forma de Pagamento</label>
                     <select class="form-select" name="paymentMethod">
-                        <option th:each="pm : ${paymentMethods}" th:selected="${sale.paymentMethod == pm}" th:text="${pm}" th:value="${pm}"></option>
+                        <option th:each="pm : ${paymentMethods}" th:selected="${sale.paymentMethod == pm}"
+                            th:text="${pm}" th:value="${pm}"></option>
                     </select>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label small fw-bold">Status</label>
                     <select class="form-select" name="status">
-                        <option th:each="ss : ${saleStatus}" th:selected="${sale.status == ss}" th:text="${ss}" th:value="${ss}"></option>
+                        <option th:each="ss : ${saleStatus}" th:selected="${sale.status == ss}" th:text="${ss}"
+                            th:value="${ss}"></option>
                     </select>
                 </div>
                 <div class="col-12 mt-4">
                     <div class="bg-light p-3 rounded d-flex justify-content-between align-items-center">
                         <span class="fw-bold">Valor Total Estimado:</span>
-                        <span class="d-flex align-items-center h3 mb-0 text-primary fw-bold">R$ 
-                            <input th:value="${sale.total}" style="font-size: 0.8em; font-weight: bold; text-align: right;" type="number" class="form-control m-1 text-primary" id="valorFinal" name="total" step="0.5"></span>
+                        <span class="d-flex align-items-center h3 mb-0 text-primary fw-bold">R$
+                            <input th:value="${sale.total}"
+                                style="font-size: 0.8em; font-weight: bold; text-align: right;" type="number"
+                                class="form-control m-1 text-primary" id="valorFinal" name="total" step="0.5"></span>
                     </div>
                 </div>
                 <div class="col-12 mt-4 d-flex justify-content-end gap-2">
@@ -62,7 +68,8 @@
             </div>
         </form>
     </div>
-
+    <div id="msg" th:if="${error}" th:data-msg="${error}"></div>
+    <script th:src="@{/js/msgHandler.js}"></script>
 </body>
 
 </html>

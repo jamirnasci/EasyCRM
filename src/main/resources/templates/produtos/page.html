@@ -116,7 +116,7 @@
 							</div>
 							<div class="col-md-4">
 								<label class="form-label small fw-bold">Estoque</label>
-								<input type="number" name="quantity" class="form-control" placeholder="0">
+								<input type="number" name="quantity" class="form-control" placeholder="0" min="0">
 							</div>
 							<div class="col-md-4">
 								<label class="form-label small fw-bold">Categoria</label>
@@ -148,7 +148,10 @@
 			</div>
 		</div>
 	</div>
+	<div id="msg" th:if="${error}" th:data-msg="${error}"></div>
+	<script th:src="@{/js/msgHandler.js}"></script>
+	<script th:src="@{/js/produtos.js}"></script>
+
 </body>
-<script th:src="@{/js/produtos.js}"></script>
 
 </html>

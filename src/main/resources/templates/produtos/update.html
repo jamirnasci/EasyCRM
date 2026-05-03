@@ -36,7 +36,7 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label small fw-bold">Estoque</label>
-                    <input th:value="${p.quantity}" type="number" name="quantity" class="form-control" placeholder="0">
+                    <input th:value="${p.quantity}" type="number" name="quantity" class="form-control" placeholder="0" min="0">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label small fw-bold">Categoria</label>
@@ -61,6 +61,8 @@
         </form>
 
     </div>
+    <div id="msg" th:if="${error}" th:data-msg="${error}"></div>
+    <script th:src="@{/js/msgHandler.js}"></script>
     <script th:src="@{/js/updateProduto.js}"></script>
 </body>
 

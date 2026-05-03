@@ -149,7 +149,10 @@
 			</div>
 		</div>
 	</div>
+	<div id="msg" th:if="${error}" th:data-msg="${error}"></div>
+    <script th:src="@{/js/msgHandler.js}"></script>
 	<script th:src="@{/js/interacoes.js}"></script>
+	
 </body>
 
 </html>

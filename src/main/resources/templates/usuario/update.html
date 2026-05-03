@@ -29,15 +29,20 @@
                         </div>
 
                         <!-- Nome -->
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label">Nome</label>
                             <input th:value="${user.name}" type="text" name="name" class="form-control" required>
                         </div>
 
                         <!-- Telefone -->
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label">Telefone</label>
                             <input th:value="${user.phone}" type="tel" class="form-control" name="phone" required>
+                        </div>
+                                                <!-- CPF -->
+                        <div class="col-md-4">
+                            <label class="form-label">CPF</label>
+                            <input th:value="${user.cpf}" type="text" class="form-control" name="cpf" required>
                         </div>
 
                         <!-- Email -->
@@ -89,7 +94,7 @@
                             <button type="submit" class="btn btn-primary">
                                 Salvar
                             </button>
-                            <a href="/users" class="btn btn-secondary">Cancelar</a>
+                            <a href="/usuario/perfil" class="btn btn-secondary">Cancelar</a>
                         </div>
 
                     </div>
@@ -98,6 +103,8 @@
             </div>
         </div>
     </div>
+    <div id="msg" th:if="${error}" th:data-msg="${error}"></div>
+    <script th:src="@{/js/msgHandler.js}"></script>
     <script th:src="@{/js/updateUsuario.js}"></script>
 </body>
 

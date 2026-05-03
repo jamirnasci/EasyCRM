@@ -15,6 +15,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 public class Sale {
@@ -22,6 +25,7 @@ public class Sale {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idsale;
 
+	@NotNull(message = "Forma de pagamento é obrigatória")
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private PaymentMethod paymentMethod;
@@ -30,23 +34,30 @@ public class Sale {
 	@Enumerated(EnumType.STRING)
 	private SaleStatus status = SaleStatus.EM_NEGOCIACAO;
 
+	@Positive(message = "Quantidade deve ser positiva")
+	@NotNull(message = "Quantidade é obrigatória")
 	@Column(nullable = false)
 	private int quantity;
 
+	@Positive(message = "Preço total deve ser positivo")
+	@NotNull(message = "Total é obrigatório")
 	@Column(nullable = false)
 	private BigDecimal total;
-
+	
 	@Column()
 	private LocalDate date = LocalDate.now();
 
+	@NotNull(message = "Cliente é obrigatório")
 	@ManyToOne()
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 
+	@NotNull(message = "Usuário é obrigatório")
 	@ManyToOne()
 	@JoinColumn(name = "user_id")
 	private User user;
 
+	@NotNull(message = "Produto é obrigatório")
 	@ManyToOne()
 	@JoinColumn(name = "product_id")
 	private Product product;
