@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jamir.easycrm.exception.UserException;
-import com.jamir.easycrm.model.Product;
 import com.jamir.easycrm.model.User;
 import com.jamir.easycrm.repository.UserRepository;
 

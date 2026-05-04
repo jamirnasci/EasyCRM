@@ -1,8 +1,5 @@
 package com.jamir.easycrm.controller;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.sql.Date;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +17,6 @@ import com.jamir.easycrm.config.UserPrincipal;
 import com.jamir.easycrm.model.Interaction;
 import com.jamir.easycrm.model.InteractionStatus;
 import com.jamir.easycrm.model.InteractionType;
-import com.jamir.easycrm.model.Product;
-import com.jamir.easycrm.model.ProductCategory;
 import com.jamir.easycrm.service.CustomerService;
 import com.jamir.easycrm.service.InteractionService;
 

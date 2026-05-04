@@ -1,11 +1,7 @@
 package com.jamir.easycrm.model;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
-
-import org.springframework.cglib.core.Local;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

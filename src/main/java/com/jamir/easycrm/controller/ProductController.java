@@ -1,11 +1,8 @@
 package com.jamir.easycrm.controller;
 
-import java.net.http.HttpClient.Redirect;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.naming.Binding;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

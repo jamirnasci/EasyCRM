@@ -87,7 +87,7 @@ public class CustomerController {
 	}
 	@DeleteMapping("/clientes/delete/{id}")
 	public ResponseEntity<Map<String, String>> delete(@PathVariable(name = "id") Long id) {
-		Map<String, String> res = new HashMap();
+		Map<String, String> res = new HashMap<String, String>();
 		return cs.delete(id).map(removedCustomer -> {
 
             res.put("msg", "Cliente removido com sucesso");
