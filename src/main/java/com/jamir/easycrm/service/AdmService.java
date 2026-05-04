@@ -35,6 +35,7 @@ public class AdmService {
             userFound.setName(user.getName());
             userFound.setPhone(user.getPhone());
             userFound.setEmail(user.getEmail());
+            userFound.setCpf(user.getCpf());
             userFound.setStatus(user.getStatus());
             userFound.setRole(user.getRole());
             if (user.getPassword() != null && !user.getPassword().isEmpty()) {

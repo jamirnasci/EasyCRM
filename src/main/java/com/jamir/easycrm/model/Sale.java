@@ -51,7 +51,6 @@ public class Sale {
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 
-	@NotNull(message = "Usuário é obrigatório")
 	@ManyToOne()
 	@JoinColumn(name = "user_id")
 	private User user;
@@ -64,8 +63,6 @@ public class Sale {
 	@CreatedDate
 	@Column(nullable = false, updatable = false)
 	private LocalDateTime createdAt = LocalDateTime.now();
-
-	
 
 	public LocalDate getDate() {
 		return date;
@@ -151,4 +148,11 @@ public class Sale {
 		return createdAt;
 	}
 
+	@Override
+	public String toString() {
+		return "Sale [idsale=" + idsale + ", paymentMethod=" + paymentMethod + ", status=" + status + ", quantity="
+				+ quantity + ", total=" + total + ", date=" + date + ", customer=" + customer + ", user=" + user
+				+ ", product=" + product + ", createdAt=" + createdAt + "]";
+	}
+	
 }

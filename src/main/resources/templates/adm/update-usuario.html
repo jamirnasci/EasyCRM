@@ -42,7 +42,7 @@
 
                         <div class="col-md-4">
                             <label class="form-label">CPF</label>
-                            <input th:value="${user.cpf}" type="text" class="form-control" name="cpf" required>
+                            <input th:value="${user.cpf}" type="text" class="form-control" name="cpf" required maxlength="11">
                         </div>
 
                         <!-- Email -->
@@ -96,7 +96,6 @@
     </div>
     <div id="msg" th:if="${error}" th:data-msg="${error}"></div>
     <script th:src="@{/js/msgHandler.js}"></script>
-    <script th:src="@{/js/updateUsuario.js}"></script>
 </body>
 
 </html>
