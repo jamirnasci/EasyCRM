@@ -3,6 +3,7 @@ package com.jamir.easycrm.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -23,6 +24,7 @@ import com.jamir.easycrm.model.UserStatus;
 import com.jamir.easycrm.service.AdmService;
 import com.jamir.easycrm.service.UserService;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 
 @Controller()
@@ -34,25 +36,23 @@ public class AdmController {
     @Autowired
     private AdmService as;
 
+    @PreAuthorize("hasRole('ADM')")
     @GetMapping("/home")
     public ModelAndView admHome(
             @AuthenticationPrincipal UserPrincipal user) {
-        if (user.getUser().getRole() != UserRoles.ADM) {
-            return new ModelAndView("utils/unauthorized");
-        }
         List<User> users = us.findAll();
         ModelAndView mv = new ModelAndView("adm/home");
         mv.addObject("users", users);
+        mv.addObject("roles", UserRoles.values());
+        mv.addObject("statuses", UserStatus.values());
         return mv;
     }
 
+    @PreAuthorize("hasRole('ADM')")
     @GetMapping("/usuario/update/{id}")
     public ModelAndView updateUsuario(
             @PathVariable Long id,
             @AuthenticationPrincipal UserPrincipal user) {
-        if (user.getUser().getRole() != UserRoles.ADM) {
-            return new ModelAndView("utils/unauthorized");
-        }
         User userFound = us.findById(id);
         ModelAndView mv = new ModelAndView("adm/update-usuario");
         mv.addObject("user", userFound);
@@ -61,6 +61,7 @@ public class AdmController {
         return mv;
     }
 
+    @PreAuthorize("hasRole('ADM')")
     @PostMapping("/usuario/update/{id}")
     public String editAccount(
             @ModelAttribute @Valid User user,
@@ -70,12 +71,9 @@ public class AdmController {
             RedirectAttributes redirectAttributes,
             @AuthenticationPrincipal UserPrincipal authUser
     ) {
-        if(authUser.getUser().getRole() != UserRoles.ADM) {
-            return "utils/unauthorized";
-        }
         if(result.hasErrors()) {
-            redirectAttributes.addFlashAttribute("error",
-                    "Erro ao validar os dados do usuário. Verifique os dados e tente novamente.");
+            String msg = result.getFieldError().getDefaultMessage();
+            redirectAttributes.addFlashAttribute("error", msg);
             return "redirect:/adm/usuario/update/" + id;
         }
         User updatedUser = as.update(id, user, imgFile);

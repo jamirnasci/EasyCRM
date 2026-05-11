@@ -48,8 +48,8 @@ public class UserController {
 			@RequestParam("imgFile") MultipartFile imgFile,
 			RedirectAttributes redirectAttributes) {
 		if (result.hasErrors()) {
-			redirectAttributes.addFlashAttribute("error",
-					"Erro ao validar os dados do usuário. Verifique os dados e tente novamente.");
+			String msg = result.getFieldError().getDefaultMessage();
+			redirectAttributes.addFlashAttribute("error", msg);
 			return "redirect:/usuario/cadastro";
 		}
 		us.createUser(user, imgFile);
@@ -76,9 +76,8 @@ public class UserController {
 			@RequestParam("newPassword") String newPassword,
 			RedirectAttributes redirectAttributes) {
 		if (result.hasErrors()) {
-			System.err.println(user.toString());
-			redirectAttributes.addFlashAttribute("error",
-					"Erro ao validar os dados do usuário. Verifique os dados e tente novamente.");
+			String msg = result.getFieldError().getDefaultMessage();
+			redirectAttributes.addFlashAttribute("error", msg);
 			return "redirect:/usuario/update";
 		}
 		User currentUser = userPrincipal.getUser();

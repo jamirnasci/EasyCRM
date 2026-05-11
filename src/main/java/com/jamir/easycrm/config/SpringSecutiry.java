@@ -3,6 +3,7 @@ package com.jamir.easycrm.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,6 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SpringSecutiry {
     @Bean
     public SecurityFilterChain webFilterChain(HttpSecurity http){
@@ -34,6 +36,8 @@ public class SpringSecutiry {
             ).logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
+            ).exceptionHandling(ex -> ex
+                .accessDeniedPage("/unauthorized")
             );
         return http.build();
     }

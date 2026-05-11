@@ -52,7 +52,8 @@ public class CustomerController {
 	@PostMapping("/clientes/create")
 	public String create(@Valid Customer c, BindingResult result, @AuthenticationPrincipal UserPrincipal user, RedirectAttributes redirectAttributes) {
 		if(result.hasErrors()) {
-			redirectAttributes.addFlashAttribute("error", "Falha ao validar os dados do cliente. Verifique os dados e tente novamente.");
+			String msg = result.getFieldError().getDefaultMessage();
+			redirectAttributes.addFlashAttribute("error", msg);
 			return "redirect:/clientes";
 		}
 		c.setUser(user.getUser());
@@ -79,7 +80,8 @@ public class CustomerController {
 	@PostMapping("/clientes/update/{id}")
 	public String update(@PathVariable(name = "id") Long id, @Valid Customer c, BindingResult result, RedirectAttributes redirectAttributes) {
 		if(result.hasErrors()) {
-			redirectAttributes.addFlashAttribute("error", "Falha ao validar os dados do cliente. Verifique os dados e tente novamente.");
+			String msg = result.getFieldError().getDefaultMessage();
+			redirectAttributes.addFlashAttribute("error", msg);
 			return "redirect:/clientes/update/" + id;
 		}
 		cs.update(id, c);

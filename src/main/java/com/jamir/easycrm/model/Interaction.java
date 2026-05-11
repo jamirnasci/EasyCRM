@@ -19,7 +19,7 @@ public class Interaction {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idinteraction;
 
-	@NotNull
+	@NotNull(message = "É necessário escolher uma data para a interação")
 	@Column(nullable = false)
 	private LocalDate date;
 
@@ -44,7 +44,6 @@ public class Interaction {
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 
-	@NotNull(message = "Usuário é obrigatório")
 	@ManyToOne()
 	@JoinColumn(name = "user_id")
 	private User user;
@@ -112,4 +111,12 @@ public class Interaction {
 	public void setStatus(InteractionStatus status) {
 		this.status = status;
 	}
+
+	@Override
+	public String toString() {
+		return "Interaction [idinteraction=" + idinteraction + ", date=" + date + ", time=" + time + ", type=" + type
+				+ ", status=" + status + ", description=" + description + ", customer=" + customer + ", user=" + user
+				+ "]";
+	}
+
 }

@@ -90,7 +90,7 @@
                     <div class="card-body pt-0 px-4 pb-5">
                         <!-- Avatar e Nome -->
                         <div class="text-center avatar-wrapper mb-4">
-                            <img th:src="${user.imgUrl != null ? user.imgUrl : '/images/default-user.png'}"
+                            <img th:src="${user.imgUrl == null ? '/img/user.png' : user.imgUrl}"
                                 class="rounded-circle avatar-img mb-3 bg-light" alt="Avatar do Usuário">
 
                             <h3 class="fw-bold text-dark mb-1" th:text="${user.name}">Nome do Usuário</h3>

@@ -53,9 +53,10 @@ public class InteractionController {
 
 	@PostMapping("/interacoes/create")
 	public String create(@Valid Interaction i, BindingResult result, RedirectAttributes redirectAttributes, @AuthenticationPrincipal UserPrincipal user) {
+		System.err.println(i.toString());
 		if (result.hasErrors()) {
-			redirectAttributes.addFlashAttribute("error",
-					"Erro ao validar os dados da interação. Verifique as informações e tente novamente.");
+			String msg = result.getFieldError().getDefaultMessage();
+			redirectAttributes.addFlashAttribute("error", msg);
 			return "redirect:/interacoes";
 		}
 		i.setUser(user.getUser());
@@ -90,8 +91,8 @@ public class InteractionController {
 			RedirectAttributes redirectAttributes,
 			@AuthenticationPrincipal UserPrincipal user) {
 		if (result.hasErrors()) {
-			redirectAttributes.addFlashAttribute("error",
-					"Erro ao validar os dados da interação. Verifique as informações e tente novamente.");
+			String msg = result.getFieldError().getDefaultMessage();
+			redirectAttributes.addFlashAttribute("error", msg);
 			return "redirect:/interacoes/update/" + id;
 		}
 		is.update(id, i, user.getUser());

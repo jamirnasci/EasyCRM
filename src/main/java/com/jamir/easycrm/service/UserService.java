@@ -29,8 +29,10 @@ public class UserService {
 	private UserRepository ur;
 
 	public User createUser(User user, MultipartFile imgFile) {
-		String fileName = createUserImage(imgFile);
-		user.setImgUrl("/uploads/users/" + fileName);
+		if(imgFile != null && !imgFile.isEmpty()){
+			String fileName = createUserImage(imgFile);
+			user.setImgUrl("/uploads/users/" + fileName);
+		}
 		user.setPassword(pe.encode(user.getPassword()));
 		return ur.save(user);
 	}

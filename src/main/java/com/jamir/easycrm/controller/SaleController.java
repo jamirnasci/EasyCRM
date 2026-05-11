@@ -72,7 +72,8 @@ public class SaleController {
 	@PostMapping("/vendas/create")
 	public String novaVenda(@Valid Sale sale, BindingResult result, @AuthenticationPrincipal UserPrincipal user, RedirectAttributes redirectAttributes) {
 		if(result.hasErrors()) {
-			redirectAttributes.addFlashAttribute("error", "Erro ao validar os dados venda. Verifique os dados e tente novamente.");
+			String msg = result.getFieldError().getDefaultMessage();
+			redirectAttributes.addFlashAttribute("error", msg);
 			return "redirect:/vendas";
 		}
 		sale.setUser(user.getUser());
@@ -109,7 +110,8 @@ public class SaleController {
 		@AuthenticationPrincipal UserPrincipal user,
 		RedirectAttributes redirectAttributes) {
 		if(result.hasErrors()) {
-			redirectAttributes.addFlashAttribute("error", "Erro ao validar os dados da venda. Verifique os dados e tente novamente.");
+			String msg = result.getFieldError().getDefaultMessage();
+			redirectAttributes.addFlashAttribute("error", msg);
 			return "redirect:/vendas/update/" + id;
 		}
 		s.setUser(user.getUser());

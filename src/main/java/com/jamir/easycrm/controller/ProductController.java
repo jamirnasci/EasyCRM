@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -26,6 +27,7 @@ import com.jamir.easycrm.model.ProductCategory;
 import com.jamir.easycrm.model.UserRoles;
 import com.jamir.easycrm.service.ProductService;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 
 @Controller
@@ -59,6 +61,7 @@ public class ProductController {
 		});
 	}
 
+	@PreAuthorize("hasRole('ADM')")
 	@PostMapping("/produtos/create")
 	public String create(
 			@ModelAttribute @Valid Product p,
@@ -66,11 +69,9 @@ public class ProductController {
 			@RequestParam("imgFile") MultipartFile imgFile,
 			RedirectAttributes redirectAttributes,
 			@AuthenticationPrincipal UserPrincipal user) {
-		if (!user.getUser().getRole().equals(UserRoles.ADM)) {
-			return "utils/unauthorized";
-		}
 		if(result.hasErrors()) {
-			redirectAttributes.addFlashAttribute("error", "Falha ao validar os dados do produto. Verifique os dados e tente novamente.");
+			String msg = result.getFieldError().getDefaultMessage();
+			redirectAttributes.addFlashAttribute("error", msg);
 			return "redirect:/produtos";
 		}
 		ps.create(p, imgFile);
@@ -89,13 +90,11 @@ public class ProductController {
 		});
 	}
 
+	@PreAuthorize("hasRole('ADM')")
 	@GetMapping("/produtos/update/{id}")
 	public ModelAndView update(
 			@PathVariable(name = "id") Long id,
 			@AuthenticationPrincipal UserPrincipal user) {
-		if (!user.getUser().getRole().equals(UserRoles.ADM)) {
-			return new ModelAndView("utils/unauthorized");
-		}
 		return ps.findById(id).map(productFound -> {
 			ModelAndView mv = new ModelAndView("produtos/update");
 			mv.addObject("p", productFound);
@@ -105,7 +104,8 @@ public class ProductController {
 			return new ModelAndView("redirect:/produtos");
 		});
 	}
-
+	
+	@PreAuthorize("hasRole('ADM')")
 	@PostMapping("/produtos/update/{id}")
 	public String update(
 			@PathVariable(name = "id") Long id, 
@@ -114,26 +114,21 @@ public class ProductController {
 			@RequestParam(name = "imgFile") MultipartFile imgFile,
 			RedirectAttributes redirectAttributes,
 			@AuthenticationPrincipal UserPrincipal user) {
-		if (!user.getUser().getRole().equals(UserRoles.ADM)) {
-			return "utils/unauthorized";
-		}
 		if(result.hasErrors()) {
-			redirectAttributes.addFlashAttribute("error", "Falha ao validar os dados do produto. Verifique os dados e tente novamente.");
+			String msg = result.getFieldError().getDefaultMessage();
+			redirectAttributes.addFlashAttribute("error", msg);
 			return "redirect:/produtos/update/" + id;
 		}
 		ps.update(id, p, imgFile);
 		return "redirect:/produtos";
 	}
 
+	@PreAuthorize("hasRole('ADM')")
 	@DeleteMapping("/produtos/delete/{id}")
 	public ResponseEntity<Map<String, String>> delete(
 			@PathVariable(name = "id") Long id,
 			@AuthenticationPrincipal UserPrincipal user) {
 		Map<String, String> res = new HashMap<String, String>();
-		if (!user.getUser().getRole().equals(UserRoles.ADM)) {
-			res.put("msg", "Usuário não autorizado");
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
-		}
 		return ps.delete(id).map(removedProduct -> {
 
 			res.put("msg", "Produto removido com sucesso");

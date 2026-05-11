@@ -21,7 +21,8 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idproduct;
-    @NotBlank
+    
+	@NotBlank(message = "Nome do produto é obrigatório")
     @Column(nullable = false)
     private String name;    
     @NotNull(message = "Preço é obrigatório")
