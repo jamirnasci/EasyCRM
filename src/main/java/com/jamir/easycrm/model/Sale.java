@@ -40,7 +40,7 @@ public class Sale {
 
 	@Positive(message = "Preço total deve ser positivo")
 	@NotNull(message = "Total é obrigatório")
-	@Column(nullable = false)
+	@Column(nullable = false, precision = 10, scale = 2)
 	private BigDecimal total;
 	
 	@Column()

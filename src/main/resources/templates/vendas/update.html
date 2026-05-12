@@ -54,11 +54,16 @@
                 </div>
                 <div class="col-12 mt-4">
                     <div class="bg-light p-3 rounded d-flex justify-content-between align-items-center">
+                        
+                        <span class="fw-bold">Preço unitário</span>
+                        <span class="text-primary fw-bold">
+                            R$ <span id="precoUnitario" th:text="${sale.product.price}"></span>
+                        </span>
                         <span class="fw-bold">Valor Total Estimado:</span>
                         <span class="d-flex align-items-center h3 mb-0 text-primary fw-bold">R$
                             <input th:value="${sale.total}"
                                 style="font-size: 0.8em; font-weight: bold; text-align: right;" type="number"
-                                class="form-control m-1 text-primary" id="valorFinal" name="total" step="0.5"></span>
+                                class="form-control m-1 text-primary" id="valorFinal" name="total" step="0.5" disabled></span>
                     </div>
                 </div>
                 <div class="col-12 mt-4 d-flex justify-content-end gap-2">
@@ -70,6 +75,7 @@
     </div>
     <div id="msg" th:if="${error}" th:data-msg="${error}"></div>
     <script th:src="@{/js/msgHandler.js}"></script>
+    <script th:src="@{/js/updateVenda.js}"></script>
 </body>
 
 </html>

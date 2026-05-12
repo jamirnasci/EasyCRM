@@ -31,7 +31,9 @@ public class SaleService {
     public BigDecimal sumTotalSales(List<Sale> sales) {
         BigDecimal total = BigDecimal.ZERO;
         for (Sale s : sales) {
-            total = total.add(s.getTotal());
+            if (s.getStatus().equals(SaleStatus.FINALIZADA)) {
+                total = total.add(s.getTotal());
+            }
         }
         return total;
     }
@@ -61,7 +63,9 @@ public class SaleService {
         }
 
         ps.decrementQuantity(selectedProduct, s.getQuantity());
-
+        BigDecimal productPrice = selectedProduct.getPrice();
+        BigDecimal totalSale = productPrice.multiply(BigDecimal.valueOf(s.getQuantity()));
+        s.setTotal(totalSale);
         return sr.save(s);
     }
 
@@ -76,7 +80,9 @@ public class SaleService {
     @Transactional
     public Sale update(Long idsale, Sale s) {
 
-        if(!s.getUser().getIduser().equals(s.getCustomer().getUser().getIduser())) {
+        Long currentUserId = s.getUser().getIduser();
+        Long saleCustomerId = s.getCustomer().getUser().getIduser();
+        if (!currentUserId.equals(saleCustomerId)) {
             throw new ProductException("O cliente selecionado não pertence ao usuário logado.");
         }
 
@@ -90,35 +96,40 @@ public class SaleService {
         int oldQty = saleFound.getQuantity();
         int newQty = s.getQuantity();
 
-        if (oldProduct.getIdproduct().equals(newProduct.getIdproduct())) {
+        if (s.getStatus().equals(SaleStatus.PERDIDA)) {
+            ps.incrementQuantity(oldProduct, oldQty);
+        } else {
+            if (oldProduct.getIdproduct().equals(newProduct.getIdproduct())) {
 
-            int diff = newQty - oldQty;
+                int diff = newQty - oldQty;
 
-            if (diff > 0) {
-                if (diff > newProduct.getQuantity()) {
+                if (diff > 0) {
+                    if (diff > newProduct.getQuantity()) {
+                        throw new ProductException("Estoque insuficiente para essa operação");
+                    }
+                    ps.decrementQuantity(newProduct, diff);
+                } else if (diff < 0) {
+                    ps.incrementQuantity(newProduct, -diff);
+                }
+
+            } else {
+                ps.incrementQuantity(oldProduct, oldQty);
+
+                if (newQty > newProduct.getQuantity()) {
                     throw new ProductException("Estoque insuficiente para essa operação");
                 }
-                ps.decrementQuantity(newProduct, diff);
-            } else if (diff < 0) {
-                ps.incrementQuantity(newProduct, -diff);
+
+                ps.decrementQuantity(newProduct, newQty);
             }
-
-        } else {
-            ps.incrementQuantity(oldProduct, oldQty);
-
-            if (newQty > newProduct.getQuantity()) {
-                throw new ProductException("Estoque insuficiente para essa operação");
-            }
-
-            ps.decrementQuantity(newProduct, newQty);
         }
-
         saleFound.setCustomer(s.getCustomer());
         saleFound.setPaymentMethod(s.getPaymentMethod());
         saleFound.setProduct(newProduct);
         saleFound.setQuantity(newQty);
         saleFound.setStatus(s.getStatus());
-        saleFound.setTotal(s.getTotal());
+        BigDecimal productPrice = s.getProduct().getPrice();
+        BigDecimal totalSale = productPrice.multiply(BigDecimal.valueOf(s.getQuantity()));
+        saleFound.setTotal(totalSale);
 
         return sr.save(saleFound);
     }

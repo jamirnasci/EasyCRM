@@ -24,7 +24,7 @@ async function findProduct(){
 productsSelect.addEventListener('change', findProduct)
 
 quantity.addEventListener('change', ()=>{
-    valorFinal.value = Number(loadedProduct.price) * Number(quantity.value)
+    valorFinal.value = (Number(loadedProduct.price) * Number(quantity.value)).toFixed(2)
 })
 
 const d1 = document.getElementById('date1')
