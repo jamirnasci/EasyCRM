@@ -29,7 +29,7 @@ public class UserService {
 	private UserRepository ur;
 
 	public User createUser(User user, MultipartFile imgFile) {
-		if(imgFile != null && !imgFile.isEmpty()){
+		if (imgFile != null && !imgFile.isEmpty()) {
 			String fileName = createUserImage(imgFile);
 			user.setImgUrl("/uploads/users/" + fileName);
 		}
@@ -43,19 +43,21 @@ public class UserService {
 
 	public User findById(Long id) {
 		return ur.findById(id).orElseThrow(() -> new UserException("Usuario não encontrado"));
-	}	
+	}
 
 	public void deleteImg(User u) {
 		String filePath = u.getImgUrl();
-		if (filePath.startsWith("/")) {
-			filePath = filePath.substring(1);
-		}
-		String basePath = System.getProperty("user.dir");
-		File imgFile = new File(basePath, filePath);
+		if (filePath != null) {
+			if (filePath.startsWith("/")) {
+				filePath = filePath.substring(1);
+			}
+			String basePath = System.getProperty("user.dir");
+			File imgFile = new File(basePath, filePath);
 
-		if (imgFile.exists()) {
-			if (!imgFile.delete()) {
-				throw new UserException("Falha ao remover imagem do usuario");
+			if (imgFile.exists()) {
+				if (!imgFile.delete()) {
+					throw new UserException("Falha ao remover imagem do usuario");
+				}
 			}
 		}
 	}
@@ -107,13 +109,13 @@ public class UserService {
 
 	public Optional<User> update(Long iduser, User user, MultipartFile imgFile, String newPassword) {
 		return ur.findById(iduser).map(userFound -> {
-			if(pe.matches(user.getPassword(), userFound.getPassword()) == false) {
+			if (pe.matches(user.getPassword(), userFound.getPassword()) == false) {
 				throw new UserException("Senha atual incorreta");
 			}
 			if (userFound.getImgUrl() != null && imgFile != null && !imgFile.isEmpty()) {
 				replaceImg(userFound, imgFile);
 			}
-			if (userFound.getImgUrl() == null && imgFile != null && !imgFile.isEmpty() && userFound.getImgUrl() != null) {
+			if (userFound.getImgUrl() == null && imgFile != null && !imgFile.isEmpty()) {
 				deleteImg(userFound);
 				String fileName = createUserImage(imgFile);
 				userFound.setImgUrl("/uploads/users/" + fileName);
@@ -121,7 +123,7 @@ public class UserService {
 			userFound.setName(user.getName());
 			userFound.setPhone(user.getPhone());
 			userFound.setEmail(user.getEmail());
-			if(newPassword != null && !newPassword.isEmpty()) {
+			if (newPassword != null && !newPassword.isEmpty()) {
 				userFound.setPassword(pe.encode(newPassword));
 			}
 			return ur.save(userFound);
