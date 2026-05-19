@@ -33,29 +33,6 @@ public class UserController {
 		return "";
 	}
 
-	@GetMapping("/usuario/cadastro")
-	public ModelAndView createAccount() {
-		ModelAndView mv = new ModelAndView("cadastro");
-		mv.addObject("roles", UserRoles.values());
-		mv.addObject("statuses", UserStatus.values());
-		return mv;
-	}
-
-	@PostMapping("/usuario/cadastro")
-	public String createAccount(
-			@ModelAttribute @Valid User user,
-			BindingResult result,
-			@RequestParam("imgFile") MultipartFile imgFile,
-			RedirectAttributes redirectAttributes) {
-		if (result.hasErrors()) {
-			String msg = result.getFieldError().getDefaultMessage();
-			redirectAttributes.addFlashAttribute("error", msg);
-			return "redirect:/usuario/cadastro";
-		}
-		us.createUser(user, imgFile);
-		return "redirect:/login";
-	}
-
 	@GetMapping("/usuario/update")
 	public ModelAndView editAccount(@AuthenticationPrincipal UserPrincipal userPrincipal) {
 		ModelAndView mv = new ModelAndView("usuario/update");

@@ -138,7 +138,7 @@
 								<label class="form-label small fw-bold">Selecionar Cliente</label>
 								<select class="form-select" name="customer" required>
 									<option selected disabled>Escolha um cliente...</option>
-									<option th:each="c: ${customers}" th:text="${c.name}" th:value="${c.idcustomer}">
+									<option th:each="c: ${customers}" th:text="${c.cpf + ' - ' + c.name}" th:value="${c.idcustomer}">
 									</option>
 								</select>
 							</div>

@@ -38,8 +38,7 @@ public class AdmController {
 
     @PreAuthorize("hasRole('ADM')")
     @GetMapping("/home")
-    public ModelAndView admHome(
-            @AuthenticationPrincipal UserPrincipal user) {
+    public ModelAndView admHome() {
         List<User> users = us.findAll();
         ModelAndView mv = new ModelAndView("adm/home");
         mv.addObject("users", users);
@@ -47,6 +46,22 @@ public class AdmController {
         mv.addObject("statuses", UserStatus.values());
         return mv;
     }
+
+    @PreAuthorize("hasRole('ADM')")
+    @PostMapping("/usuario/cadastro")
+	public String createAccount(
+			@ModelAttribute @Valid User user,
+			BindingResult result,
+			@RequestParam("imgFile") MultipartFile imgFile,
+			RedirectAttributes redirectAttributes) {
+		if (result.hasErrors()) {
+			String msg = result.getFieldError().getDefaultMessage();
+			redirectAttributes.addFlashAttribute("error", msg);
+			return "redirect:/usuario/cadastro";
+		}
+		us.createUser(user, imgFile);
+		return "redirect:/login";
+	}
 
     @PreAuthorize("hasRole('ADM')")
     @GetMapping("/usuario/update/{id}")

@@ -22,8 +22,6 @@ public class SpringSecutiry {
             	.requestMatchers("/css/**", "/js/**", "/img/**", "/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/").permitAll()
                 .requestMatchers(HttpMethod.GET, "/login").permitAll()
-                .requestMatchers(HttpMethod.GET, "/usuario/cadastro").permitAll()
-                .requestMatchers(HttpMethod.POST, "/usuario/cadastro").permitAll()
                 .requestMatchers(HttpMethod.POST, "/login").permitAll()
                 .anyRequest().authenticated()
             )

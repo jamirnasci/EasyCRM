@@ -38,8 +38,6 @@ public class Sale {
 	@Column(nullable = false)
 	private int quantity;
 
-	@Positive(message = "Preço total deve ser positivo")
-	@NotNull(message = "Total é obrigatório")
 	@Column(nullable = false, precision = 10, scale = 2)
 	private BigDecimal total;
 	
