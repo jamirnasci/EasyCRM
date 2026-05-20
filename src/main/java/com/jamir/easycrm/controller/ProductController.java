@@ -24,10 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.jamir.easycrm.config.UserPrincipal;
 import com.jamir.easycrm.model.Product;
 import com.jamir.easycrm.model.ProductCategory;
-import com.jamir.easycrm.model.UserRoles;
 import com.jamir.easycrm.service.ProductService;
-
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 
 @Controller

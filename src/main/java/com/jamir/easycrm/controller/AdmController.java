@@ -24,7 +24,6 @@ import com.jamir.easycrm.model.UserStatus;
 import com.jamir.easycrm.service.AdmService;
 import com.jamir.easycrm.service.UserService;
 
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 
 @Controller()
@@ -38,10 +37,18 @@ public class AdmController {
 
     @PreAuthorize("hasRole('ADM')")
     @GetMapping("/home")
-    public ModelAndView admHome() {
-        List<User> users = us.findAll();
+    public ModelAndView admHome(
+            @AuthenticationPrincipal UserPrincipal user,
+            @RequestParam(name = "name", required = false) String name) {
+        Long currentUserId = user.getUser().getIduser();
         ModelAndView mv = new ModelAndView("adm/home");
-        mv.addObject("users", users);
+        if (name != null && !name.isBlank() && !name.isEmpty()) {
+            List<User> users = us.searchByName(name, currentUserId);
+            mv.addObject("users", users);
+        } else {
+            List<User> users = us.findByIdNot(currentUserId);
+            mv.addObject("users", users);
+        }
         mv.addObject("roles", UserRoles.values());
         mv.addObject("statuses", UserStatus.values());
         return mv;
@@ -49,19 +56,19 @@ public class AdmController {
 
     @PreAuthorize("hasRole('ADM')")
     @PostMapping("/usuario/cadastro")
-	public String createAccount(
-			@ModelAttribute @Valid User user,
-			BindingResult result,
-			@RequestParam("imgFile") MultipartFile imgFile,
-			RedirectAttributes redirectAttributes) {
-		if (result.hasErrors()) {
-			String msg = result.getFieldError().getDefaultMessage();
-			redirectAttributes.addFlashAttribute("error", msg);
-			return "redirect:/usuario/cadastro";
-		}
-		us.createUser(user, imgFile);
-		return "redirect:/login";
-	}
+    public String createAccount(
+            @ModelAttribute @Valid User user,
+            BindingResult result,
+            @RequestParam("imgFile") MultipartFile imgFile,
+            RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            String msg = result.getFieldError().getDefaultMessage();
+            redirectAttributes.addFlashAttribute("error", msg);
+            return "redirect:/usuario/cadastro";
+        }
+        us.createUser(user, imgFile);
+        return "redirect:/login";
+    }
 
     @PreAuthorize("hasRole('ADM')")
     @GetMapping("/usuario/update/{id}")
@@ -84,9 +91,8 @@ public class AdmController {
             @RequestParam("imgFile") MultipartFile imgFile,
             @PathVariable Long id,
             RedirectAttributes redirectAttributes,
-            @AuthenticationPrincipal UserPrincipal authUser
-    ) {
-        if(result.hasErrors()) {
+            @AuthenticationPrincipal UserPrincipal authUser) {
+        if (result.hasErrors()) {
             String msg = result.getFieldError().getDefaultMessage();
             redirectAttributes.addFlashAttribute("error", msg);
             return "redirect:/adm/usuario/update/" + id;

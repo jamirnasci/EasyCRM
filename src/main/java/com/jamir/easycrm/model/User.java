@@ -17,6 +17,7 @@ import jakarta.validation.constraints.NotBlank;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "iduser")
     private Long iduser;
 
 	@NotBlank(message = "Nome é obrigatório")

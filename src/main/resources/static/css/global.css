@@ -71,6 +71,10 @@ body {
     padding: 20px;
 }
 
+.list-container{
+    max-height: 500px;
+}
+
 /* Responsividade para telas pequenas */
 @media (max-width: 768px) {
     #sidebar {

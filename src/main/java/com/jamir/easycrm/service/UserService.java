@@ -41,6 +41,13 @@ public class UserService {
 		return ur.findAll();
 	}
 
+	public List<User> findByIdNot(Long id){
+		return ur.findByIduserNot(id);
+	}
+	public List<User> searchByName(String name, Long id){
+		return ur.searchByName(name, id);
+	}
+
 	public User findById(Long id) {
 		return ur.findById(id).orElseThrow(() -> new UserException("Usuario não encontrado"));
 	}
